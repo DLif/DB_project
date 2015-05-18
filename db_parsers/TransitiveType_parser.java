@@ -2,18 +2,15 @@ package db_parsers;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import savedTempResults.Serializeable;
 import db_entities.*;
+import db_entities.Maps_entitys;
 
 public class TransitiveType_parser implements File_parser,Serializeable{
 	
 	//take about 8-7 minutes.
 	
-	static Map<String,Conflict_entity> conflictMap;
-	static Map<String,Location_entity> locationsMap;
-	static Map<String,Language_entity> langugagesMap;
 	static int rdf_str_len;
 	
 	static String war_type = "<wordnet_war_100973077>";
@@ -29,9 +26,9 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 	public void init(){
 		
 		// init with expected size so it won't have to endlessly expand
-		conflictMap = new HashMap<String,Conflict_entity>(18000); 
-		locationsMap = new HashMap<String,Location_entity>(90000);
-		langugagesMap = new HashMap<String,Language_entity>();
+		Maps_entitys.conflictMap = new HashMap<String,Conflict_entity>(18000); 
+		Maps_entitys.locationsMap = new HashMap<String,Location_entity>(90000);
+		Maps_entitys.langugagesMap = new HashMap<String,Language_entity>();
 		rdf_str_len = "rdf:type".length();
 		
 		//variables used for serialization process
@@ -54,7 +51,7 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 			String entity_tag = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			//put into map
-			conflictMap.put(entity_tag, new War_entity(entity_tag));
+			Maps_entitys.conflictMap.put(entity_tag, new War_entity(entity_tag));
 		}
 		else if (line_type.contains(battle_type)){
 			/* Calculate the battle entity name tag  */
@@ -64,7 +61,7 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 			String entity_tag = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			//put into map
-			conflictMap.put(entity_tag, new Battle_entity(entity_tag));
+			Maps_entitys.conflictMap.put(entity_tag, new Battle_entity(entity_tag));
 		}
 		else if (line_type.contains(city_type)){
 			/* Calculate the battle entity name tag  */
@@ -74,7 +71,7 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 			String entity_tag = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			//put into map
-			locationsMap.put(entity_tag, new City_entity(entity_tag));
+			Maps_entitys.locationsMap.put(entity_tag, new City_entity(entity_tag));
 		}
 		else if (line_type.contains(country_type)){
 			/* Calculate the battle entity name tag  */
@@ -84,7 +81,7 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 			String entity_tag = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			//put into map
-			locationsMap.put(entity_tag, new Country_entity(entity_tag));
+			Maps_entitys.locationsMap.put(entity_tag, new Country_entity(entity_tag));
 		}
 		else if (line_type.contains(language_type)){
 			/* Calculate the battle entity name tag  */
@@ -94,7 +91,7 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 			String entity_tag = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			//put into map
-			langugagesMap.put(entity_tag, new Language_entity(entity_tag));
+			Maps_entitys.langugagesMap.put(entity_tag, new Language_entity(entity_tag));
 		}
 	}
 
@@ -107,19 +104,19 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 	
 	public void putInMap(String str_CTOR, String objType) {
 		if(objType.equals("class db_entities.War_entity")){
-			conflictMap.put(str_CTOR, new War_entity(str_CTOR));
+			Maps_entitys.conflictMap.put(str_CTOR, new War_entity(str_CTOR));
 		}
 		else if(objType.equals("class db_entities.Battle_entity")){
-			conflictMap.put(str_CTOR, new Battle_entity(str_CTOR));
+			Maps_entitys.conflictMap.put(str_CTOR, new Battle_entity(str_CTOR));
 		}
 		else if(objType.equals("class db_entities.Country_entity")){
-			locationsMap.put(str_CTOR, new City_entity(str_CTOR));
+			Maps_entitys.locationsMap.put(str_CTOR, new City_entity(str_CTOR));
 		}
 		else if(objType.equals("class db_entities.City_entity")){
-			locationsMap.put(str_CTOR, new Country_entity(str_CTOR));
+			Maps_entitys.locationsMap.put(str_CTOR, new Country_entity(str_CTOR));
 		}
 		else if(objType.equals("class db_entities.Language_entity")){
-			langugagesMap.put(str_CTOR, new Language_entity(str_CTOR));
+			Maps_entitys.langugagesMap.put(str_CTOR, new Language_entity(str_CTOR));
 		}
 		
 	}
@@ -127,16 +124,16 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 
 	public String getNextTouple() {
 		if (keyIterator == null) {
-			keyIterator = conflictMap.keySet().iterator();
+			keyIterator = Maps_entitys.conflictMap.keySet().iterator();
 			serialiezedMapNum = 1;
 		}
 		if (!keyIterator.hasNext()){
 			if (serialiezedMapNum == 1){
-				keyIterator = locationsMap.keySet().iterator();
+				keyIterator = Maps_entitys.locationsMap.keySet().iterator();
 				serialiezedMapNum = 2;
 			} //if MAP 2 empty than we are in a very big trouble already
 			else if (serialiezedMapNum == 2){
-				keyIterator = langugagesMap.keySet().iterator();
+				keyIterator = Maps_entitys.langugagesMap.keySet().iterator();
 				serialiezedMapNum = 3;
 			}
 			else {
@@ -147,19 +144,19 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 		String key = keyIterator.next();
 		//System.out.println("Send: "+key);
 		if (serialiezedMapNum == 1) {
-			return key+"|"+conflictMap.get(key).getClass().toString();
+			return key+"|"+Maps_entitys.conflictMap.get(key).getClass().toString();
 		}
 		else if (serialiezedMapNum == 2){
-			return key+"|"+locationsMap.get(key).getClass().toString();
+			return key+"|"+Maps_entitys.locationsMap.get(key).getClass().toString();
 		}
 		else {
-			return key+"|"+langugagesMap.get(key).getClass().toString();
+			return key+"|"+Maps_entitys.langugagesMap.get(key).getClass().toString();
 		}
 	}
 
 
 	public int rowsNum() {
-		return conflictMap.keySet().size()+locationsMap.keySet().size()+langugagesMap.keySet().size();
+		return Maps_entitys.conflictMap.keySet().size()+Maps_entitys.locationsMap.keySet().size()+Maps_entitys.langugagesMap.keySet().size();
 	}
 	
 	

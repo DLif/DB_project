@@ -9,7 +9,7 @@ public abstract class Conflict_entity {
 	Date happenedOnDate;
 	String name;
 	List<Location_entity> conflictLocations;
-	List<Country_entity> conflictParticipants;
+	List<Location_entity> conflictParticipants;
 	
 	Conflict_entity(String name){
 		conflict_id=-1;
@@ -17,7 +17,7 @@ public abstract class Conflict_entity {
 		this.name = name;
 		// I assume that eventually any location will have conflict Locations and conflict participants so can init in CTOR 
 		conflictLocations = new ArrayList<Location_entity>(); 
-		conflictParticipants = new ArrayList<Country_entity>(); 
+		conflictParticipants = new ArrayList<Location_entity>(); 
 		
 	}
 	
@@ -25,7 +25,7 @@ public abstract class Conflict_entity {
 		conflictLocations.add(loc);
 	}
 	
-	public void addParticipantsINPlace(Country_entity loc){
+	public void addParticipantsINPlace(Location_entity loc){
 		conflictParticipants.add(loc);
 	}
 	
