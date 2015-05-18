@@ -4,10 +4,11 @@ import db_entities.*;
 
 public class FactsFile_parser implements File_parser{
 	
-	static int happenedInNum =0;
+	static int happenedInNum = 0;
+	static int participatedInNum = 0 ;
 	
 	static String happenedIn_relation = "<happenedIn>";
-	static String locatedIn_relation = "<isLocatedIn>";
+	static String participatedIn_relation = "<participatedIn>";
 
 	public void init() {
 		// For the meanwhile each entity holds the relation between each other.This might change
@@ -25,10 +26,10 @@ public class FactsFile_parser implements File_parser{
 			
 			//now get the two entities related
 			indexEntityStart = nth_occurence(2,line,"<");
-			String left_entity = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart));
+			String left_entity = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			indexEntityStart = nth_occurence(4,line,"<");
-			String right_entity = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart));
+			String right_entity = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			//now get the proper objects fro the maps and set relation reference
 			Conflict_entity conflict = TransitiveType_parser.conflictMap.get(left_entity);
@@ -41,15 +42,36 @@ public class FactsFile_parser implements File_parser{
 					return;
 				}
 				else{
-					System.out.println(left_entity +" happened in "+right_entity);
 					conflict.addOcuurencePlace(occurencePlace);
 				}
 			}
 			
 		}
-		/*else if(relation.contains(locatedIn_relation)){
+		else if(relation.contains(participatedIn_relation)){
+			participatedInNum++;
 			
-		}*/
+			//now get the two entities related
+			indexEntityStart = nth_occurence(2,line,"<");
+			String left_entity = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
+			
+			indexEntityStart = nth_occurence(4,line,"<");
+			String right_entity = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
+			
+			//now get the proper objects fro the maps and set relation reference
+			Conflict_entity conflict = TransitiveType_parser.conflictMap.get(right_entity);
+			if (conflict == null){
+				return;
+			}
+			else{
+				Location_entity occurencePlace = TransitiveType_parser.locationsMap.get(left_entity);
+				if (occurencePlace == null) {
+					return;
+				}
+				else if(occurencePlace.getClass().toString().equals("class db_entities.Country_entity")){
+					conflict.addParticipantsINPlace((Country_entity)occurencePlace);
+				}
+			}
+		}
 		
 	}
 	

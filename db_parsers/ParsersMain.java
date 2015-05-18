@@ -11,15 +11,15 @@ public class ParsersMain {
 	
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		TransitiveType_parser noStaticINJava = new TransitiveType_parser();
-		MoveOnFile("D:/David space/data_bases/yagoTransitiveType.tsv",noStaticINJava);
+		/*MoveOnFile("D:/David space/data_bases/yagoTransitiveType.tsv",noStaticINJava);
 		try {
 			TransitiveType_tempRes.saveMap(noStaticINJava,"D:/David space/data_bases/TransitiveMap");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		TransitiveType_tempRes.getMap("D:/David space/data_bases/TransitiveMap", noStaticINJava);
 		MoveOnFile("D:/David space/data_bases/yagoFacts.tsv",new FactsFile_parser());
 		prints();
 
@@ -78,11 +78,18 @@ public class ParsersMain {
 		System.out.println();
 		
 		System.out.println("Number of happened in relations: "+FactsFile_parser.happenedInNum);
-		Conflict_entity test =TransitiveType_parser.conflictMap.get("<Abagana_Ambush>");
-		if (test == null) {
-			System.out.println("Locations");
+		Conflict_entity testCon =TransitiveType_parser.conflictMap.get("<Battle_of_Ebelsberg>");
+		if (testCon == null) {
+			System.out.println("Error in locations");
 		}
-		System.out.println("<Abagana_Ambush> happened in"+test.getFistInconflictLocations());
+		System.out.println("<Battle_of_Ebelsberg> happened in "+testCon.getFistInconflictLocations());
+		System.out.println("Number of participated In relations: "+FactsFile_parser.participatedInNum);
+		Conflict_entity testCon2 =TransitiveType_parser.conflictMap.get("<Battle_of_Ebelsberg>");
+		if (testCon2 == null) {
+			System.out.println("Error in locations");
+		}
+		System.out.println("In the <War_of_the_Fourth_Coalition> one of the prticipance was "+testCon2.getFistInconflictParticipants());
+		
 		
 	}
 

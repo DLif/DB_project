@@ -25,8 +25,22 @@ public abstract class Conflict_entity {
 		conflictLocations.add(loc);
 	}
 	
+	public void addParticipantsINPlace(Country_entity loc){
+		conflictParticipants.add(loc);
+	}
+	
 	public String getFistInconflictLocations(){
+		if (conflictLocations.isEmpty()){
+			return "EMPTY";
+		}
 		return conflictLocations.get(0).name;
+	}
+	
+	public String getFistInconflictParticipants(){
+		if (conflictParticipants.isEmpty()){
+			return "EMPTY";
+		}
+		return conflictParticipants.get(0).name;
 	}
 	
 	

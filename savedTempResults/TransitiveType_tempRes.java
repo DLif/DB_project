@@ -62,7 +62,7 @@ public class TransitiveType_tempRes {
 		    	line = sc.nextLine();
 		    	
 		    	int delimiterIndex = line.indexOf("|");
-		    	getFromFile.putInMap(line.substring(0, delimiterIndex-1),line.substring(delimiterIndex+1,line.length() ));
+		    	getFromFile.putInMap(line.substring(0, delimiterIndex),line.substring(delimiterIndex+1,line.length() ));
 		    }
 			
 			

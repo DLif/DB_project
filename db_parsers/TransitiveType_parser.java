@@ -23,7 +23,7 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 	static String language_type = "<wordnet_language_106282651>";
 	
 	static Iterator<String> keyIterator;
-	static int serialiezedMapNum = 0;
+	static int serialiezedMapNum;
 	
 	
 	public void init(){
@@ -33,7 +33,10 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 		locationsMap = new HashMap<String,Location_entity>(90000);
 		langugagesMap = new HashMap<String,Language_entity>();
 		rdf_str_len = "rdf:type".length();
+		
+		//variables used for serialization process
 		keyIterator = null;
+		serialiezedMapNum = 0;
 		
 	}
 	
@@ -96,25 +99,33 @@ public class TransitiveType_parser implements File_parser,Serializeable{
 	}
 
 
+	/*
+	 * From here starts the serialization functions
+	 * 
+	 * 
+	 */
+	
 	public void putInMap(String str_CTOR, String objType) {
-		if(objType.equals(War_entity.class.getClass().toString())){
+		if(objType.equals("class db_entities.War_entity")){
 			conflictMap.put(str_CTOR, new War_entity(str_CTOR));
 		}
-		else if(objType.equals(Battle_entity.class.getClass().toString())){
+		else if(objType.equals("class db_entities.Battle_entity")){
 			conflictMap.put(str_CTOR, new Battle_entity(str_CTOR));
 		}
-		else if(objType.equals(City_entity.class.getClass().toString())){
+		else if(objType.equals("class db_entities.Country_entity")){
 			locationsMap.put(str_CTOR, new City_entity(str_CTOR));
 		}
-		else if(objType.equals(Country_entity.class.getClass().toString())){
+		else if(objType.equals("class db_entities.City_entity")){
 			locationsMap.put(str_CTOR, new Country_entity(str_CTOR));
+		}
+		else if(objType.equals("class db_entities.Language_entity")){
+			langugagesMap.put(str_CTOR, new Language_entity(str_CTOR));
 		}
 		
 	}
 
 
 	public String getNextTouple() {
-		// TODO Auto-generated method stub
 		if (keyIterator == null) {
 			keyIterator = conflictMap.keySet().iterator();
 			serialiezedMapNum = 1;
