@@ -3,24 +3,48 @@ package db_entities;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Conflict_entity {
+public abstract class Conflict_entity extends Entity{
 	
-	int conflict_id;
 	Date happenedOnDate;
-	String name;
+	String wikiURL;
+	int wikiLen;
 	List<Location_entity> conflictLocations;
 	List<Location_entity> conflictParticipants;
 	
 	Conflict_entity(String name){
-		conflict_id=-1;
+		super(name);
 		happenedOnDate = null;
 		this.name = name;
 		// I assume that eventually any location will have conflict Locations and conflict participants so can init in CTOR 
 		conflictLocations = new ArrayList<Location_entity>(); 
 		conflictParticipants = new ArrayList<Location_entity>(); 
-		
+		wikiURL = null;
 	}
 	
+	public int getWikiLen() {
+		return wikiLen;
+	}
+
+	public void setWikiLen(int wikiLen) {
+		this.wikiLen = wikiLen;
+	}
+
+	public String getWikiURL() {
+		return wikiURL;
+	}
+
+	public void setWikiURL(String wikiURL) {
+		this.wikiURL = wikiURL;
+	}
+
+	public Date getHappenedOnDate() {
+		return happenedOnDate;
+	}
+
+	public void setHappenedOnDate(Date happenedOnDate) {
+		this.happenedOnDate = happenedOnDate;
+	}
+
 	public void addOcuurencePlace(Location_entity loc){
 		conflictLocations.add(loc);
 	}

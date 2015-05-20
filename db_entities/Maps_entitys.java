@@ -7,6 +7,11 @@ public class Maps_entitys {
 	public static Map<String,Conflict_entity> conflictMap;
 	public static Map<String,Location_entity> locationsMap;
 	public static Map<String,Language_entity> langugagesMap;
+	public static Map<String,Leader_entity> leadersMap;
+	public static Map<String,Continent_entity> continentsMap;
+	public static Map<String,Currency_entity> currenciesMap;
+	public static Map<String,Construction_entity> constructionsMap;
+	
 	
 	public static int nth_occurence(int numberOfOccur,String findIn,String subToFind){
 		

@@ -8,5 +8,13 @@ public class City_entity extends Location_entity {
 		super(name);
 		locatedIn = null;
 	}
+	
+	public void setLocatedIn(Country_entity locatedIn){
+		this.locatedIn = locatedIn;
+	}
+	
+	public Country_entity getLocatedIn(){
+		return locatedIn;
+	}
 
 }

@@ -6,10 +6,10 @@ public class Date {
 	
 	
 	private Integer year; //Integer.MIN_VALUE means unknown
-	private char month; //Character.MAX_VALUE means unknown
-	private char day; //Character.MAX_VALUE means unknown
+	private Integer month; //Character.MAX_VALUE means unknown
+	private Integer day; //Character.MAX_VALUE means unknown
 	
-	Date(Integer year,char month,char day){
+	Date(Integer year,Integer month,Integer day){
 		this.year = year;
 		this.month = month;
 		this.day = day;
@@ -38,36 +38,67 @@ public class Date {
 		}
 	}
 	
+	public String toString(){
+		StringBuilder str_date = new StringBuilder();
+		
+		if (year.intValue() == Integer.MIN_VALUE){
+			str_date.append("YYYY-");
+		}
+		else {
+			str_date.append(year.intValue()+"-");
+		}
+		
+		if (month == Integer.MIN_VALUE){
+			str_date.append("MM-");
+		}
+		else {
+			str_date.append(month.intValue()+"-");
+		}
+		
+		if (day == Integer.MIN_VALUE){
+			str_date.append("DD");
+		}
+		else {
+			str_date.append(day.intValue());
+		}
+		
+		return str_date.toString();
+	}
+	
 	//the string format is "-63-##-##"^^xsd:date and "1936-##-##"^^xsd:date
 	//this function get it in YYXX-MM-DD form
 	//this function cut the string by the delimiter and call CTOR with correct types
 	public static Date DateString_to_Date(String dateStr){
 		Integer year;
-		char month;
-		char day;
+		Integer month;
+		Integer day;
+		int BCminusAvoidence = 0;//so dates will work in "-63-##-##" format as well
 		
-		String yearStr = dateStr.substring(0,Maps_entitys.nth_occurence(1,dateStr,"-"));
-		if (!yearStr.equals("##")){
+		if (Maps_entitys.nth_occurence(1,dateStr,"-") == 0){ //find is BC or AC, that will change the parsing (format "-63-##-##")
+			BCminusAvoidence++;
+		}
+		String yearStr = dateStr.substring(0,Maps_entitys.nth_occurence(1+BCminusAvoidence,dateStr,"-"));
+		if (!yearStr.contains("#")){
 			year = Integer.parseInt(yearStr);
 		}
 		else {
 			year = Integer.MIN_VALUE;
 		}
 		
-		String monthStr = dateStr.substring(Maps_entitys.nth_occurence(1,dateStr,"-")+1,Maps_entitys.nth_occurence(2,dateStr,"-"));
-		if (!monthStr.equals("##")){
-			month = (char) Integer.parseInt(monthStr);
+		String monthStr = dateStr.substring(Maps_entitys.nth_occurence(1+BCminusAvoidence,dateStr,"-")+1,Maps_entitys.nth_occurence(2+BCminusAvoidence,dateStr,"-"));
+		if (!monthStr.contains("#")){
+			month = Integer.parseInt(monthStr);
 		}
 		else {
-			month = Character.MAX_VALUE;
+			month = Integer.MIN_VALUE;
 		}
 		
-		String dayStr = dateStr.substring(Maps_entitys.nth_occurence(2,dateStr,"-")+1,dateStr.length());
-		if (!dayStr.equals("##")){
-			day = (char) Integer.parseInt(dayStr);
+		String dayStr = dateStr.substring(Maps_entitys.nth_occurence(2+BCminusAvoidence,dateStr,"-")+1,dateStr.length());
+		if (!dayStr.contains("#")){
+			day = Integer.parseInt(dayStr);
 		}
 		else {
-			day = Character.MAX_VALUE;
+			day = Integer.MIN_VALUE;
 		}
 		
 		
