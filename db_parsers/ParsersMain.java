@@ -20,7 +20,7 @@ public class ParsersMain {
 	//For debug/undebug mode change isDenugMode() func
 	
 
-	/*public static void main(String[] args) {
+	public static void main(String[] args) {
 		
 		boolean debug = isDenugMode();
 		
@@ -54,7 +54,6 @@ public class ParsersMain {
 		prints();
 
 	}
-	*/
 	
 	public static void MoveOnFile(String filename,File_parser parserClass){
 		
