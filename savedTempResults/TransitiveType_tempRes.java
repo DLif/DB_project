@@ -18,8 +18,9 @@ public class TransitiveType_tempRes {
 	
 	public static boolean saveMap(Serializeable getFromFile,String filename) throws Exception{
 		
+		BufferedWriter bufferedWriter = null;
 		try {
-			BufferedWriter bufferedWriter = new BufferedWriter ( new FileWriter ( filename ) );
+			bufferedWriter = new BufferedWriter ( new FileWriter ( filename ) );
 			
 			
 			
@@ -36,12 +37,15 @@ public class TransitiveType_tempRes {
 				bufferedWriter.append(next+"\n");
 			}
 			
-			bufferedWriter.close();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
+		}
+		finally {
+			bufferedWriter.close();
+			
 		}
 		
 		return true;
