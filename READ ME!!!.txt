@@ -1,0 +1,136 @@
+Everything was uploaded successfully to the DB [see output below]
++ SEE PDF
+
+
+
+IMPORTANT:
+----------
+for now, keep the UPLOAD flag as false (unless you're working on your local server) because it will fail and trash the db (see bugs below).
+
+first use SERIALIZE = true and DESERIALIZE = false
+this will parse the files and store the results
+
+now always use DESERIALIZE = true, this will skip parsing.
+
+CHANGES:
+-------
+- added serialization for all maps (supported by Java)
+- finished to implement all uploaders
+- changed the package structure abit
+
+
+
+BUGS:
+-----
+Constructions: wikiResource is never found [Parser]
+Leaders DeathYear is never found [Probably parser]
+MilitaryAction wikiResource is never found [Parser]
+Leaders - you forgot the gender
+
+Constructions: please make the constructions entites contain the locationID
+and not vise versa, currently I upload all constructions with some existing locationID, will change when changes are introduced.
+
+Also, you forgot to handle different types, I fixed that though.
+
+
+NEED TO ADD
+-----------
+FOKING DOCUMENTATION
+according to the guidelines, the code itself is also graded
+I did what I could but, db_parsers and db_entites still require some refactoring
+
+
+------------- [Successful run output] --------------------
+Parsing ..
+Parsing D:/yago/yagoTransitiveType.tsv ..
+Done.
+File number of rows: 77997861
+Took: 220.999seconds
+
+Parsing D:/yago/yagoFacts.tsv ..
+Done.
+File number of rows: 5652463
+Took: 16.569seconds
+
+Parsing D:/yago/yagoLiteralFacts.tsv ..
+Done.
+File number of rows: 1611324
+Took: 5.471seconds
+
+Parsing D:/yago/yagoDateFacts.tsv ..
+Done.
+File number of rows: 3260893
+Took: 12.055seconds
+
+Parsing D:/yago/yagoWikipediaInfo.tsv ..
+Done.
+File number of rows: 71953513
+Took: 156.589seconds
+
+Parsing D:/yago/yagoLabels.tsv ..
+Done.
+File number of rows: 40066279
+Took: 112.401seconds
+
+Done Parsing !
+Driver loaded successfully
+Trying to connect... Connected!
+Uploading entities..
+Uploading Continents..
+Uploaded batch: 146 , Took 2 seconds
+ .. OK!
+Uploading AdministrativeDivisions (Countries, Cities) ..
+Uploaded batch: 20000 , Took 263 seconds
+Uploaded batch: 20000 , Took 253 seconds
+Uploaded batch: 20000 , Took 263 seconds
+Uploaded batch: 20000 , Took 251 seconds
+Uploaded batch: 10176 , Took 132 seconds
+ .. OK!
+Uploading currencies..
+Uploaded batch: 2886 , Took 38 seconds
+ .. OK!
+Uploading Languages..
+Uploaded batch: 15024 , Took 189 seconds
+ .. OK!
+Uploading constructions..
+Uploaded batch: 1364 , Took 16 seconds
+ .. OK!
+Uploading military actions..
+Uploaded batch: 17384 , Took 212 seconds
+ .. OK!
+Uploading leaders ..
+Uploaded batch: 3020 , Took 36 seconds
+ .. OK!
+Uploading countries..
+Uploaded batch: 6757 , Took 85 seconds
+ .. OK!
+Uploading cities ..
+Uploaded batch: 20000 , Took 256 seconds
+Uploaded batch: 20000 , Took 243 seconds
+Uploaded batch: 20000 , Took 251 seconds
+Uploaded batch: 20000 , Took 238 seconds
+Uploaded batch: 3419 , Took 42 seconds
+ .. OK!
+Setting capital cities ..
+Uploaded batch: 6757 , Took 82 seconds
+ .. OK!
+Uploading battles ..
+Uploaded batch: 12729 , Took 155 seconds
+ .. OK!
+Uploading wars ..
+Uploaded batch: 4655 , Took 57 seconds
+ .. OK!
+Uploading relations between entities..
+Uploading AdministrativeDivisionLeader ..
+Uploaded batch: 3463 , Took 43 seconds
+ .. OK!
+Uploading LanguagesInCountries ..
+Uploaded batch: 841 , Took 10 seconds
+ .. OK!
+Uploading MilitaryActionLocations ..
+Uploaded batch: 16209 , Took 193 seconds
+ .. OK!
+Uploading MilitaryActionParticipants ..
+Uploaded batch: 13973 , Took 169 seconds
+ .. OK!
+Done!
