@@ -65,7 +65,7 @@ public class LeaderUploader extends EntityUploader{
 		}
 		else
 		{
-			statement.setObject(7, date.getYear(), Types.SMALLINT);
+			statement.setObject(10, date.getYear(), Types.SMALLINT);
 		}
 		
 		

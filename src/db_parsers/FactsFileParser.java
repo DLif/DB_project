@@ -138,6 +138,7 @@ public class FactsFileParser extends FileParser{
 			//nof map check because the same construction cann't have 2 owners
 			ownsNum++;
 			Construction_entity construction= new Construction_entity(right_entity);
+			construction.setConstructionLocation(location);
 			location.addConstruction(construction);
 			ParsedData.constructionsMap.put(right_entity,construction);
 		}

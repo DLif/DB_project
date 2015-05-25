@@ -41,40 +41,28 @@ public class WikipediaInfoParser extends FileParser {
 		}
 		
 		Location_entity loc = ParsedData.locationsMap.get(entity);
-		if (loc == null){
-			return;
-		}
-		else{
+		if (loc != null){
 			hasWikipediaArticleLengthNum++;
 			loc.setWikiLen(Integer.parseInt(property));
 		}
 		
 		Conflict_entity conflict = ParsedData.conflictMap.get(entity);
-		if (conflict == null){
-			return;
-		}
-		else{
+		if (conflict != null){
 			hasWikipediaArticleLengthNum++;
 			conflict.setWikiLen(Integer.parseInt(property));
 		}
 		
 		Leader_entity leader = ParsedData.leadersMap.get(entity);
-		if (leader == null){
-			return;
-		}
-		else{
+		if (leader != null){
 			hasWikipediaArticleLengthNum++;
 			leader.setWikiLen(Integer.parseInt(property));
 		}
 		
 		Construction_entity construction = ParsedData.constructionsMap.get(entity);
-		if (construction == null){
-			return;
-		}
-		else{
+		if (construction != null){
 			hasWikipediaArticleLengthNum++;
 			construction.setWikiLen(Integer.parseInt(property));
-		}
+		} 
 	}
 
 	private void wikiArticalURL_objSet(String line) {
@@ -88,37 +76,25 @@ public class WikipediaInfoParser extends FileParser {
 		
 		
 		Location_entity loc = ParsedData.locationsMap.get(entity);
-		if (loc == null){
-			return;
-		}
-		else{
+		if (loc != null){
 			hasWikipediaUrlNum++;
 			loc.setWikiURL(property);
 		}
 		
 		Conflict_entity conflict = ParsedData.conflictMap.get(entity);
-		if (conflict == null){
-			return;
-		}
-		else{
+		if (conflict != null){
 			hasWikipediaUrlNum++;
 			conflict.setWikiURL(property);
 		}
 		
 		Leader_entity leader = ParsedData.leadersMap.get(entity);
-		if (leader == null){
-			return;
-		}
-		else{
+		if (leader != null){
 			hasWikipediaUrlNum++;
 			leader.setWikiURL(property);
 		}
 		
 		Construction_entity construction = ParsedData.constructionsMap.get(entity);
-		if (construction == null){
-			return;
-		}
-		else{
+		if (construction != null){
 			hasWikipediaUrlNum++;
 			construction.setWikiURL(property);
 		}

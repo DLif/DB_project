@@ -8,11 +8,21 @@ public class Construction_entity  extends Entity{
 	private static final long serialVersionUID = 9106720767072754416L;
 	public String wikiURL;
 	public int wikiLen;
+	public Location_entity constructionLocation;
 	
 	public Construction_entity(String name){
 		super(name);
 		wikiURL = null;
 		wikiLen = 0;
+		constructionLocation = null;
+	}
+
+	public Location_entity getConstructionLocation() {
+		return constructionLocation;
+	}
+
+	public void setConstructionLocation(Location_entity constructionLocation) {
+		this.constructionLocation = constructionLocation;
 	}
 
 	public int getWikiLen() {

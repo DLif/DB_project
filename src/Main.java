@@ -22,15 +22,15 @@ public class Main {
 	/**
 	 * Configurations, need to export to file
 	 */
-	public static final String transTypeFile = "D:/yago/yagoTransitiveType.tsv";
-	public static final String factsFile = "D:/yago/yagoFacts.tsv";
-	public static final String literalFactsFile = "D:/yago/yagoLiteralFacts.tsv";
-	public static final String dateFactsFile = "D:/yago/yagoDateFacts.tsv";
-	public static final String wikiInfoFile = "D:/yago/yagoWikipediaInfo.tsv";
-	public static final String labelsFile = "D:/yago/yagoLabels.tsv";
+	public static final String transTypeFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoTransitiveType.tsv";
+	public static final String factsFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoFacts.tsv";
+	public static final String literalFactsFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoLiteralFacts.tsv";
+	public static final String dateFactsFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoDateFacts.tsv";
+	public static final String wikiInfoFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoWikipediaInfo.tsv";
+	public static final String labelsFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoLabels.tsv";
 	
 	public static final boolean DESERIALIZE = false;
-	public static final boolean SERIALIZE = false;
+	public static final boolean SERIALIZE = true;
 	public static final boolean UPLOAD = false;
 	
 	public static final String HOST = "localhost";
