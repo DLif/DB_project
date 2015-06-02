@@ -16,6 +16,7 @@ public class FactsFileParser extends FileParser{
 	public static int ownsNum = 0;
 	public static int diedInNum = 0;
 	public static int bornInNum = 0;
+	public static int hasGenderNum = 0;
 	
 	
 	static String happenedIn_relation = "<happenedIn>";
@@ -28,6 +29,7 @@ public class FactsFileParser extends FileParser{
 	static String owns_relation = "<owns>";
 	static String diedIn_relation = "<diedIn>";
 	static String bornIn_relation = "<wasBornIn>";
+	static String hasGender_relation = "<hasGender>";
 	
 
 
@@ -73,53 +75,84 @@ public class FactsFileParser extends FileParser{
 			owns_mapSetter(line);
 		}
 		else if(relation.contains(bornIn_relation)){
-			//now get the two entities related
-			StringBuilder left_container = new StringBuilder();
-			String right_entity = get_Left_Right_Entities(line,left_container);
-			String left_entity = left_container.toString();
-
-			//now get the proper objects from the maps and set relation reference
-			Location_entity location = ParsedData.locationsMap.get(right_entity);
-				
-			if (location == null) {
-				return;
-			}
-			else {
-				Leader_entity leader = ParsedData.leadersMap.get(left_entity);
-				if (leader == null){
-					return;
-				}
-				else {
-					bornInNum++;
-					leader.setBreathLocation(location);
-				}
-			}
+			bornIn_mapSetter(line);
 		}
 		else if(relation.contains(diedIn_relation)){
-			//now get the two entities related
-			StringBuilder left_container = new StringBuilder();
-			String right_entity = get_Left_Right_Entities(line,left_container);
-			String left_entity = left_container.toString();
+			diedIn_mapSetter(line);
+		}
+		else if(relation.contains(hasGender_relation)){
+			hasGender_mapSetter(line);
+		}
+		
+	}
 
-			//now get the proper objects from the maps and set relation reference
-			Location_entity location = ParsedData.locationsMap.get(right_entity);
-				
-			if (location == null) {
+	private void hasGender_mapSetter(String line) {
+		//now get the two entities related
+		StringBuilder left_container = new StringBuilder();
+		String right_entity = get_Left_Right_Entities(line,left_container);
+		String left_entity = left_container.toString();
+		
+		Leader_entity leader = ParsedData.leadersMap.get(left_entity);
+		if (leader == null){
+			return;
+		}
+		else{
+			hasGenderNum++;
+			if (right_entity.equals("<male>")){
+				leader.setLeaderGender(Leader_entity.gender.male);
+			}
+			else {
+				leader.setLeaderGender(Leader_entity.gender.female);
+			}
+		}
+	}
+
+	private void diedIn_mapSetter(String line) {
+		//now get the two entities related
+		StringBuilder left_container = new StringBuilder();
+		String right_entity = get_Left_Right_Entities(line,left_container);
+		String left_entity = left_container.toString();
+
+		//now get the proper objects from the maps and set relation reference
+		Location_entity location = ParsedData.locationsMap.get(right_entity);
+			
+		if (location == null) {
+			return;
+		}
+		else {
+			Leader_entity leader = ParsedData.leadersMap.get(left_entity);
+			if (leader == null){
 				return;
 			}
 			else {
-				Leader_entity leader = ParsedData.leadersMap.get(left_entity);
-				if (leader == null){
-					return;
-				}
-				else {
-					diedInNum++;
-					leader.setDeathLocation(location);
-				}
+				diedInNum++;
+				leader.setDeathLocation(location);
 			}
 		}
-		
-		
+	}
+
+	private void bornIn_mapSetter(String line) {
+		//now get the two entities related
+		StringBuilder left_container = new StringBuilder();
+		String right_entity = get_Left_Right_Entities(line,left_container);
+		String left_entity = left_container.toString();
+
+		//now get the proper objects from the maps and set relation reference
+		Location_entity location = ParsedData.locationsMap.get(right_entity);
+			
+		if (location == null) {
+			return;
+		}
+		else {
+			Leader_entity leader = ParsedData.leadersMap.get(left_entity);
+			if (leader == null){
+				return;
+			}
+			else {
+				bornInNum++;
+				leader.setBreathLocation(location);
+			}
+		}
 	}
 
 	private void owns_mapSetter(String line) {

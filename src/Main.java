@@ -22,12 +22,12 @@ public class Main {
 	/**
 	 * Configurations, need to export to file
 	 */
-	public static final String transTypeFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoTransitiveType.tsv";
-	public static final String factsFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoFacts.tsv";
-	public static final String literalFactsFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoLiteralFacts.tsv";
-	public static final String dateFactsFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoDateFacts.tsv";
-	public static final String wikiInfoFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoWikipediaInfo.tsv";
-	public static final String labelsFile = "E:/David migration/corses matirial/data_bases/YAGO/yagoLabels.tsv";
+	public static final String transTypeFile = "D:/David space/data_bases/yagoTransitiveType.tsv";
+	public static final String factsFile = "D:/David space/data_bases/yagoFacts.tsv";
+	public static final String literalFactsFile = "D:/David space/data_bases/yagoLiteralFacts.tsv";
+	public static final String dateFactsFile = "D:/David space/data_bases/yagoDateFacts.tsv";
+	public static final String wikiInfoFile = "D:/David space/data_bases/yagoWikipediaInfo.tsv";
+	public static final String labelsFile = "D:/David space/data_bases/yagoLabels.tsv";
 	
 	public static final boolean DESERIALIZE = false;
 	public static final boolean SERIALIZE = true;
@@ -84,6 +84,7 @@ public class Main {
 		{
 			// note that this data will not contain actual DB IDs
 			ParsedData.serializeMaps();
+			printResults();
 		}
 		
 	
@@ -316,6 +317,13 @@ public class Main {
 			System.out.println("Error in locations");
 		}
 		System.out.println("<Kim_Il-sung> died in  "+testleader2.getDeathLocation().getName());
+		
+		System.out.println("Number has gender in relations: "+FactsFileParser.hasGenderNum);
+		Leader_entity testleader5 =ParsedData.leadersMap.get("<Kim_Il-sung>");
+		if (testleader5 == null) {
+			System.out.println("Error in locations");
+		}
+		System.out.println("<Kim_Il-sung> has gender  "+testleader5.getLeaderGender());
 		
 		System.out.println();
 		System.out.println();

@@ -12,6 +12,7 @@ public class Leader_entity  extends Entity{
 	public List<Location_entity> leads;
 	public Location_entity birthLocation;
 	public Location_entity deathLocation;
+	public gender leaderGender;
 	public Date bornDate;
 	public Date deathDate;
 	public String wikiURL;
@@ -82,6 +83,18 @@ public class Leader_entity  extends Entity{
 	public List<Location_entity> leadsWhat()
 	{
 		return this.leads;
+	}
+	
+	public gender getLeaderGender() {
+		return leaderGender;
+	}
+
+	public void setLeaderGender(gender leaderGender) {
+		this.leaderGender = leaderGender;
+	}
+
+	public enum gender{
+		male,female
 	}
 	
 
