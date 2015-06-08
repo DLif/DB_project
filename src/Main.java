@@ -3,14 +3,15 @@
 
 
 
+import hangman.db.upload.ParsedDataUploader;
+import hangman.db.upload.AbstractBatchUploader;
+import hangman.parsing.parsers.FileParser;
+import hangman.parsing.parsers.ParsedData;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import upload.DBUpdater;
-import upload.DBUploader;
-import db_parsers.FileParser;
-import db_parsers.ParsedData;
 
 
 
@@ -78,8 +79,8 @@ public class Main {
 		if(UPLOAD)
 		{
 		
-			DBUpdater.configure(HOST, PORT, SCHEMA, USERNAME, PASSWORD, SERIALIZE, CONNECTIONS_PER_TABLE);
-			DBUpdater updatr = new DBUpdater();
+			ParsedDataUploader.configure(HOST, PORT, SCHEMA, USERNAME, PASSWORD, SERIALIZE, CONNECTIONS_PER_TABLE);
+			ParsedDataUploader updatr = new ParsedDataUploader();
 			try{
 				updatr.begin();
 			}
@@ -141,7 +142,7 @@ public class Main {
 			DESERIALIZE = Boolean.parseBoolean(prop.getProperty("deserialize"));
 			SERIALIZE =  Boolean.parseBoolean(prop.getProperty("serialize"));
 			UPLOAD = Boolean.parseBoolean(prop.getProperty("upload" ));
-			DBUploader.BATCH_SIZE = Integer.parseInt(prop.getProperty("batchSize"));
+			AbstractBatchUploader.BATCH_SIZE = Integer.parseInt(prop.getProperty("batchSize"));
 			
 			// load file locations
 			FileParser.transTypeFile = prop.getProperty("transTypeFile");
