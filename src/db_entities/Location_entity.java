@@ -19,8 +19,8 @@ public abstract class Location_entity extends Entity{
 	public Integer wikiLen;
 	
 
-	Location_entity(String name){
-		super(name);
+	Location_entity(){
+		super();
 		constructions_lst = new ArrayList<Construction_entity>();
 		wikiLen = 0;
 	}

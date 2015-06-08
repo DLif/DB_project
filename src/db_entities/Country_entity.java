@@ -15,8 +15,8 @@ public class Country_entity extends Location_entity {
 	public List<Language_entity> officialLanguage_lst;
 	
 
-	public Country_entity(String name) {
-		super(name);
+	public Country_entity() {
+		super();
 		officialLanguage_lst = new ArrayList<Language_entity>();
 	}
 	

@@ -10,8 +10,8 @@ public class Construction_entity  extends Entity{
 	public int wikiLen;
 	public Location_entity constructionLocation;
 	
-	public Construction_entity(String name){
-		super(name);
+	public Construction_entity(){
+		super();
 		wikiURL = null;
 		wikiLen = 0;
 		constructionLocation = null;

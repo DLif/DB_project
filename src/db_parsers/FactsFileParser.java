@@ -170,7 +170,7 @@ public class FactsFileParser extends FileParser{
 		else {
 			//nof map check because the same construction cann't have 2 owners
 			ownsNum++;
-			Construction_entity construction= new Construction_entity(right_entity);
+			Construction_entity construction= new Construction_entity();
 			construction.setConstructionLocation(location);
 			location.addConstruction(construction);
 			ParsedData.constructionsMap.put(right_entity,construction);
@@ -289,7 +289,7 @@ public class FactsFileParser extends FileParser{
 				ParsedData.leadersMap.get(left_entity).addLeaderOf(location);
 			}
 			else { //make the new leader and add his relation and to map
-				Leader_entity leaderOfLocation = new Leader_entity(left_entity);
+				Leader_entity leaderOfLocation = new Leader_entity();
 				leaderOfLocation.addLeaderOf(location);
 				ParsedData.leadersMap.put(left_entity,leaderOfLocation);
 			}

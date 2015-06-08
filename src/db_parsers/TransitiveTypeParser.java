@@ -53,28 +53,28 @@ public class TransitiveTypeParser extends FileParser{
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.conflictMap.put(entity_tag, new War_entity(entity_tag));
+			ParsedData.conflictMap.put(entity_tag, new War_entity());
 		}
 		else if (line_type.contains(battle_type)){
 
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.conflictMap.put(entity_tag, new Battle_entity(entity_tag));
+			ParsedData.conflictMap.put(entity_tag, new Battle_entity());
 		}
 		else if (line_type.contains(city_type)){
 
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.locationsMap.put(entity_tag, new City_entity(entity_tag));
+			ParsedData.locationsMap.put(entity_tag, new City_entity());
 		}
 		else if (line_type.contains(country_type)){
 
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.locationsMap.put(entity_tag, new Country_entity(entity_tag));
+			ParsedData.locationsMap.put(entity_tag, new Country_entity());
 		}
 		else if (line_type.contains(language_type)){
 			/* Calculate the battle entity name tag  */
@@ -84,21 +84,21 @@ public class TransitiveTypeParser extends FileParser{
 			String entity_tag = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			//put into map
-			ParsedData.langugagesMap.put(entity_tag, new Language_entity(entity_tag));
+			ParsedData.langugagesMap.put(entity_tag, new Language_entity());
 		}
 		else if (line_type.contains(continent_type)){
 			
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.continentsMap.put(entity_tag, new Continent_entity(entity_tag));
+			ParsedData.continentsMap.put(entity_tag, new Continent_entity());
 		}
 		else if (line_type.contains(currency_type)){
 			
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.currenciesMap.put(entity_tag, new Currency_entity(entity_tag));
+			ParsedData.currenciesMap.put(entity_tag, new Currency_entity());
 		}
 	}
 	
@@ -109,91 +109,6 @@ public class TransitiveTypeParser extends FileParser{
 		//the same reason for looking for > from indexEntityStart
 		int indexEntityStart = line.indexOf("<", 2);
 		return line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
-	}
-
-
-	/*
-	 * From here starts the serialization functions
-	 * 
-	 * 
-	 */
-	
-	public void putInMap(String str_CTOR, String objType) {
-		if(objType.equals("class db_entities.War_entity")){
-			ParsedData.conflictMap.put(str_CTOR, new War_entity(str_CTOR));
-		}
-		else if(objType.equals("class db_entities.Battle_entity")){
-			ParsedData.conflictMap.put(str_CTOR, new Battle_entity(str_CTOR));
-		}
-		else if(objType.equals("class db_entities.Country_entity")){
-			ParsedData.locationsMap.put(str_CTOR, new Country_entity(str_CTOR));
-		}
-		else if(objType.equals("class db_entities.City_entity")){
-			ParsedData.locationsMap.put(str_CTOR, new City_entity(str_CTOR));
-		}
-		else if(objType.equals("class db_entities.Language_entity")){
-			ParsedData.langugagesMap.put(str_CTOR, new Language_entity(str_CTOR));
-		}
-		else if(objType.equals("class db_entities.Continent_entity")){
-			ParsedData.continentsMap.put(str_CTOR, new Continent_entity(str_CTOR));
-		}
-		else if(objType.equals("class db_entities.Currency_entity")){
-			ParsedData.currenciesMap.put(str_CTOR, new Currency_entity(str_CTOR));
-		}
-		
-	}
-
-
-	public String getNextTouple() {
-		if (keyIterator == null) {
-			keyIterator = ParsedData.conflictMap.keySet().iterator();
-			serialiezedMapNum = 1;
-		}
-		if (!keyIterator.hasNext()){
-			if (serialiezedMapNum == 1){
-				keyIterator = ParsedData.locationsMap.keySet().iterator();
-				serialiezedMapNum = 2;
-			} //if MAP 2 empty than we are in a very big trouble already
-			else if (serialiezedMapNum == 2){
-				keyIterator = ParsedData.langugagesMap.keySet().iterator();
-				serialiezedMapNum = 3;
-			}
-			else if (serialiezedMapNum == 3){
-				keyIterator = ParsedData.continentsMap.keySet().iterator();
-				serialiezedMapNum = 4;
-			}
-			else if (serialiezedMapNum == 4){
-				keyIterator = ParsedData.currenciesMap.keySet().iterator();
-				serialiezedMapNum = 5;
-			}
-			else {
-				return null;
-			}
-		}
-		
-		String key = keyIterator.next();
-		//System.out.println("Send: "+key);
-		if (serialiezedMapNum == 1) {
-			return key+"|"+ParsedData.conflictMap.get(key).getClass().toString();
-		}
-		else if (serialiezedMapNum == 2){
-			return key+"|"+ParsedData.locationsMap.get(key).getClass().toString();
-		}
-		else if (serialiezedMapNum == 3){
-			return key+"|"+ParsedData.langugagesMap.get(key).getClass().toString();
-		}
-		else if (serialiezedMapNum == 4){
-			return key+"|"+ParsedData.continentsMap.get(key).getClass().toString();
-		}
-		else if (serialiezedMapNum == 5){
-			return key+"|"+ParsedData.currenciesMap.get(key).getClass().toString();
-		}
-		return null;
-	}
-
-
-	public int rowsNum() {
-		return ParsedData.conflictMap.size()+ParsedData.locationsMap.size()+ParsedData.langugagesMap.size()+ParsedData.continentsMap.size()+ParsedData.currenciesMap.size();
 	}
 	
 	

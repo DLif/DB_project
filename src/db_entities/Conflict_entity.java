@@ -15,8 +15,7 @@ public abstract class Conflict_entity extends Entity{
 	public List<Location_entity> conflictLocations;
 	public List<Location_entity> conflictParticipants;
 	
-	Conflict_entity(String name){
-		super(name);
+	Conflict_entity(){
 		
 		conflictLocations = new ArrayList<Location_entity>(); 
 		conflictParticipants = new ArrayList<Location_entity>(); 

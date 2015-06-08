@@ -18,8 +18,8 @@ public class Leader_entity  extends Entity{
 	public String wikiURL;
 	public int wikiLen;
 
-	public Leader_entity(String name) {
-		super(name);
+	public Leader_entity() {
+		super();
 		leads = new ArrayList<Location_entity>();
 		wikiLen = 0;
 		leaderGender = null;
