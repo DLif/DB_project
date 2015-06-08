@@ -56,7 +56,7 @@ public abstract class Entity implements java.io.Serializable{
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        Pattern unicodeOutliers = Pattern.compile("[^\\x00-\\x20\\x41-\\x5a\\x61-\\x7a]",Pattern.UNICODE_CASE | Pattern.CANON_EQ| Pattern.CASE_INSENSITIVE);
+        Pattern unicodeOutliers = Pattern.compile("[^\\x00-\\x7F]",Pattern.UNICODE_CASE | Pattern.CANON_EQ| Pattern.CASE_INSENSITIVE);
         Matcher unicodeOutlierMatcher = unicodeOutliers.matcher(input_name);
 
         return unicodeOutlierMatcher.replaceAll("");
