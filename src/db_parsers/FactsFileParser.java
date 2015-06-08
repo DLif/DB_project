@@ -35,8 +35,8 @@ public class FactsFileParser extends FileParser{
 
 	public void init() {
 		// For the meanwhile each entity holds the relation between each other.This might change
-		ParsedData.leadersMap = new HashMap<String,Leader_entity>(3000);
-		ParsedData.constructionsMap = new HashMap<String,Construction_entity>();
+		ParsedData.leadersMap = new HashMap<String,LeaderEntity>(3000);
+		ParsedData.constructionsMap = new HashMap<String,ConstructionEntity>();
 	}
 
 	public void filter(String line){
@@ -92,17 +92,17 @@ public class FactsFileParser extends FileParser{
 		String right_entity = get_Left_Right_Entities(line,left_container);
 		String left_entity = left_container.toString();
 		
-		Leader_entity leader = ParsedData.leadersMap.get(left_entity);
+		LeaderEntity leader = ParsedData.leadersMap.get(left_entity);
 		if (leader == null){
 			return;
 		}
 		else{
 			hasGenderNum++;
 			if (right_entity.equals("<male>")){
-				leader.setLeaderGender(Leader_entity.gender.male);
+				leader.setLeaderGender(LeaderEntity.gender.male);
 			}
 			else {
-				leader.setLeaderGender(Leader_entity.gender.female);
+				leader.setLeaderGender(LeaderEntity.gender.female);
 			}
 		}
 	}
@@ -114,13 +114,13 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 
 		//now get the proper objects from the maps and set relation reference
-		Location_entity location = ParsedData.locationsMap.get(right_entity);
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(right_entity);
 			
 		if (location == null) {
 			return;
 		}
 		else {
-			Leader_entity leader = ParsedData.leadersMap.get(left_entity);
+			LeaderEntity leader = ParsedData.leadersMap.get(left_entity);
 			if (leader == null){
 				return;
 			}
@@ -138,13 +138,13 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 
 		//now get the proper objects from the maps and set relation reference
-		Location_entity location = ParsedData.locationsMap.get(right_entity);
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(right_entity);
 			
 		if (location == null) {
 			return;
 		}
 		else {
-			Leader_entity leader = ParsedData.leadersMap.get(left_entity);
+			LeaderEntity leader = ParsedData.leadersMap.get(left_entity);
 			if (leader == null){
 				return;
 			}
@@ -162,7 +162,7 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 		
 		//now get the proper objects from the maps and set relation reference
-		Location_entity location = ParsedData.locationsMap.get(left_entity);
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(left_entity);
 			
 		if (location == null) {
 			return;
@@ -170,7 +170,7 @@ public class FactsFileParser extends FileParser{
 		else {
 			//nof map check because the same construction cann't have 2 owners
 			ownsNum++;
-			Construction_entity construction= new Construction_entity();
+			ConstructionEntity construction= new ConstructionEntity();
 			construction.setConstructionLocation(location);
 			location.addConstruction(construction);
 			ParsedData.constructionsMap.put(right_entity,construction);
@@ -184,19 +184,19 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 		
 		//now get the proper objects from the maps and set relation reference
-		Location_entity location = ParsedData.locationsMap.get(left_entity);
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(left_entity);
 			
-		if (location == null || !(location instanceof Country_entity)) {
+		if (location == null || !(location instanceof CountryEntity)) {
 			return;
 		}
 		else {
-			Language_entity officialLang = ParsedData.langugagesMap.get(right_entity);
+			LanguageEntity officialLang = ParsedData.langugagesMap.get(right_entity);
 			if (officialLang == null){
 				return;
 			}
 			else {
 				hasOfficialLanguageNum++;
-				((Country_entity)location).addOfficialLanguage(officialLang);
+				((CountryEntity)location).addOfficialLanguage(officialLang);
 			}
 		}
 	}
@@ -208,19 +208,19 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 		
 		//now get the proper objects from the maps and set relation reference
-		Location_entity location = ParsedData.locationsMap.get(left_entity);
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(left_entity);
 			
-		if (location == null || !(location instanceof Country_entity)) {
+		if (location == null || !(location instanceof CountryEntity)) {
 			return;
 		}
 		else {
-			Currency_entity currency = ParsedData.currenciesMap.get(right_entity);
+			CurrencyEntity currency = ParsedData.currenciesMap.get(right_entity);
 			if (currency == null){
 				return;
 			}
 			else {
 				hasCurrencyNum++;
-				((Country_entity)location).setCurrency(currency);
+				((CountryEntity)location).setCurrency(currency);
 			}
 		}
 	}
@@ -232,12 +232,12 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 		
 		//now get the proper objects fro the maps and set relation reference
-		Conflict_entity conflict = ParsedData.conflictMap.get(left_entity);
+		ConflictEntity conflict = ParsedData.conflictMap.get(left_entity);
 		if (conflict == null){
 			return;
 		}
 		else{
-			Location_entity occurencePlace = ParsedData.locationsMap.get(right_entity);
+			AdministrativeLocationEntity occurencePlace = ParsedData.locationsMap.get(right_entity);
 			if (occurencePlace == null) {
 				return;
 			}
@@ -255,12 +255,12 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 		
 		//now get the proper objects fro the maps and set relation reference
-		Conflict_entity conflict = ParsedData.conflictMap.get(right_entity);
+		ConflictEntity conflict = ParsedData.conflictMap.get(right_entity);
 		if (conflict == null){
 			return;
 		}
 		else{
-			Location_entity occurencePlace = ParsedData.locationsMap.get(left_entity);
+			AdministrativeLocationEntity occurencePlace = ParsedData.locationsMap.get(left_entity);
 			if (occurencePlace == null) {
 				return;
 			}
@@ -278,7 +278,7 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 		
 		//now get the proper objects from the maps and set relation reference
-		Location_entity location = ParsedData.locationsMap.get(right_entity);
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(right_entity);
 			
 		if (location == null) {
 			return;
@@ -289,7 +289,7 @@ public class FactsFileParser extends FileParser{
 				ParsedData.leadersMap.get(left_entity).addLeaderOf(location);
 			}
 			else { //make the new leader and add his relation and to map
-				Leader_entity leaderOfLocation = new Leader_entity();
+				LeaderEntity leaderOfLocation = new LeaderEntity();
 				leaderOfLocation.addLeaderOf(location);
 				ParsedData.leadersMap.put(left_entity,leaderOfLocation);
 			}
@@ -303,33 +303,33 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 
 		//now get the proper objects from the maps and set relation reference
-		Location_entity inlocation = ParsedData.locationsMap.get(left_entity);
+		AdministrativeLocationEntity inlocation = ParsedData.locationsMap.get(left_entity);
 			
 		if (inlocation == null) {
 			return;
 		}
 		else {
 			//first case - city in country
-			if (inlocation instanceof City_entity){ //check if city
-				Location_entity outerlocation = ParsedData.locationsMap.get(right_entity);
-				if (outerlocation == null || !(outerlocation instanceof Country_entity)){ //second if case so we wont have city in city
+			if (inlocation instanceof CityEntity){ //check if city
+				AdministrativeLocationEntity outerlocation = ParsedData.locationsMap.get(right_entity);
+				if (outerlocation == null || !(outerlocation instanceof CountryEntity)){ //second if case so we wont have city in city
 					return;
 				}
 				else {
 					locatedInNum++;
-					((City_entity)inlocation).setLocatedIn((Country_entity)outerlocation);
+					((CityEntity)inlocation).setLocatedIn((CountryEntity)outerlocation);
 				}
 				
 			}
 			//second case - country in continent
-			else if (inlocation instanceof Country_entity){ //country
-				Continent_entity continentForCity = ParsedData.continentsMap.get(right_entity);
+			else if (inlocation instanceof CountryEntity){ //country
+				ContinentEntity continentForCity = ParsedData.continentsMap.get(right_entity);
 				if(continentForCity == null){
 					return;
 				}
 				else{
 					locatedInNum++;
-					((Country_entity)inlocation).setLocatedIn((Continent_entity)continentForCity);
+					((CountryEntity)inlocation).setLocatedIn((ContinentEntity)continentForCity);
 				}
 			}
 		}
@@ -342,18 +342,18 @@ public class FactsFileParser extends FileParser{
 		String left_entity = left_container.toString();
 		
 		//now get the proper objects fro the maps and set relation reference
-		Location_entity capitalCity = ParsedData.locationsMap.get(right_entity);
-		if (capitalCity == null || !(capitalCity instanceof City_entity)){
+		AdministrativeLocationEntity capitalCity = ParsedData.locationsMap.get(right_entity);
+		if (capitalCity == null || !(capitalCity instanceof CityEntity)){
 			return;
 		}
 		else{
-			Location_entity  countryLoc = ParsedData.locationsMap.get(left_entity);
-			if (countryLoc == null || !(countryLoc instanceof Country_entity)) {
+			AdministrativeLocationEntity  countryLoc = ParsedData.locationsMap.get(left_entity);
+			if (countryLoc == null || !(countryLoc instanceof CountryEntity)) {
 				return;
 			}
 			else {
 				hasCapitalNum++;
-				((Country_entity)countryLoc).setCapital((City_entity)capitalCity);
+				((CountryEntity)countryLoc).setCapital((CityEntity)capitalCity);
 			}
 		}
 	}

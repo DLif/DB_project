@@ -29,11 +29,11 @@ public class TransitiveTypeParser extends FileParser{
 	public void init(){
 		
 		// init with expected size so it won't have to endlessly expand
-		ParsedData.conflictMap = new HashMap<String,Conflict_entity>(18000); 
-		ParsedData.locationsMap = new HashMap<String,Location_entity>(90000);
-		ParsedData.langugagesMap = new HashMap<String,Language_entity>(15000);
-		ParsedData.continentsMap = new HashMap<String,Continent_entity>(140);
-		ParsedData.currenciesMap = new HashMap<String,Currency_entity>(2800);
+		ParsedData.conflictMap = new HashMap<String,ConflictEntity>(18000); 
+		ParsedData.locationsMap = new HashMap<String,AdministrativeLocationEntity>(90000);
+		ParsedData.langugagesMap = new HashMap<String,LanguageEntity>(15000);
+		ParsedData.continentsMap = new HashMap<String,ContinentEntity>(140);
+		ParsedData.currenciesMap = new HashMap<String,CurrencyEntity>(2800);
 		rdf_str_len = "rdf:type".length();
 		
 		//variables used for serialization process
@@ -53,28 +53,28 @@ public class TransitiveTypeParser extends FileParser{
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.conflictMap.put(entity_tag, new War_entity());
+			ParsedData.conflictMap.put(entity_tag, new WarEntity());
 		}
 		else if (line_type.contains(battle_type)){
 
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.conflictMap.put(entity_tag, new Battle_entity());
+			ParsedData.conflictMap.put(entity_tag, new BattleEntity());
 		}
 		else if (line_type.contains(city_type)){
 
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.locationsMap.put(entity_tag, new City_entity());
+			ParsedData.locationsMap.put(entity_tag, new CityEntity());
 		}
 		else if (line_type.contains(country_type)){
 
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.locationsMap.put(entity_tag, new Country_entity());
+			ParsedData.locationsMap.put(entity_tag, new CountryEntity());
 		}
 		else if (line_type.contains(language_type)){
 			/* Calculate the battle entity name tag  */
@@ -84,21 +84,21 @@ public class TransitiveTypeParser extends FileParser{
 			String entity_tag = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
 			
 			//put into map
-			ParsedData.langugagesMap.put(entity_tag, new Language_entity());
+			ParsedData.langugagesMap.put(entity_tag, new LanguageEntity());
 		}
 		else if (line_type.contains(continent_type)){
 			
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.continentsMap.put(entity_tag, new Continent_entity());
+			ParsedData.continentsMap.put(entity_tag, new ContinentEntity());
 		}
 		else if (line_type.contains(currency_type)){
 			
 			String entity_tag = getEntityTag(line);
 			
 			//put into map
-			ParsedData.currenciesMap.put(entity_tag, new Currency_entity());
+			ParsedData.currenciesMap.put(entity_tag, new CurrencyEntity());
 		}
 	}
 	

@@ -6,10 +6,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Iterator;
 
-import db_entities.Conflict_entity;
-import db_entities.Continent_entity;
-import db_entities.Country_entity;
-import db_entities.Currency_entity;
+import db_entities.ConflictEntity;
 import db_entities.Date;
 import db_entities.Entity;
 
@@ -29,7 +26,7 @@ public class MilitaryActionUploader extends EntityUploader {
 	@Override
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
-		Conflict_entity conflict =  (Conflict_entity) entity;
+		ConflictEntity conflict =  (ConflictEntity) entity;
 		statement.setString(1, sanitizeString(conflict.getName()));
 		Date date = conflict.getHappenedOnDate();
 		if(date == null)

@@ -69,7 +69,7 @@ protected boolean error;
 /**
  * maximum batch size
  */
-public static final int BATCH_SIZE = 20000;
+public static int BATCH_SIZE = 20000;
 
 
 public DBUploader(Connection sqlConnection)
@@ -161,11 +161,11 @@ protected void uploadBatch() {
 		sqlConn.commit();
 		postCommit(pstmt);
 
-		System.out.print("Uploaded batch: " + this.actualBatchSize + " , ");
-		printTimeDiff(time);
+		//System.out.print("Uploaded batch: " + this.actualBatchSize + " , ");
+		//printTimeDiff(time);
 		
 	} catch (SQLException e) {
-		System.out.println("ERROR uploadBatch()" + e.getMessage());
+		System.out.println("ERROR uploadBatch(): " + e.getMessage());
 		error = true;
 		safelyRollBack();
 		

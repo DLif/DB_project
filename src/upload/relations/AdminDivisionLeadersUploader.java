@@ -8,13 +8,13 @@ import java.util.Iterator;
 
 
 import db_entities.Entity;
-import db_entities.Leader_entity;
-import db_entities.Location_entity;
+import db_entities.LeaderEntity;
+import db_entities.AdministrativeLocationEntity;
 
 public class AdminDivisionLeadersUploader extends RelationUploader{
 
 	
-	private Leader_entity currentLeader; 
+	private LeaderEntity currentLeader; 
 	
 	public AdminDivisionLeadersUploader(Connection sqlConnection,
 			Iterator<? extends Entity> entityIterator) {
@@ -32,9 +32,9 @@ public class AdminDivisionLeadersUploader extends RelationUploader{
 	@Override
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
-		Location_entity loc =  (Location_entity) entity;
-		statement.setInt(1, currentLeader.getClass_id());
-		statement.setInt(2, loc.getClass_id());
+		AdministrativeLocationEntity loc =  (AdministrativeLocationEntity) entity;
+		statement.setInt(1, currentLeader.getID());
+		statement.setInt(2, loc.getID());
 		
 	}
 
@@ -47,7 +47,7 @@ public class AdminDivisionLeadersUploader extends RelationUploader{
 		}
 		
 		// set leader
-		this.currentLeader = (Leader_entity) this.entityIt.next();
+		this.currentLeader = (LeaderEntity) this.entityIt.next();
 		
 		// list of entities this leader leads
 		this.currentRelationList = this.currentLeader.leadsWhat();

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 
-import db_entities.Conflict_entity;
+import db_entities.ConflictEntity;
 import db_entities.Entity;
 
 
@@ -19,7 +19,7 @@ public class MilitaryActionLocationsUploader extends RelationUploader {
 	}
 	
 
-	protected Conflict_entity currentConflict;
+	protected ConflictEntity currentConflict;
 	
 	@Override
 	protected String getQueryString() {
@@ -32,8 +32,8 @@ public class MilitaryActionLocationsUploader extends RelationUploader {
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
 		
-		statement.setInt(1, currentConflict.getClass_id());
-		statement.setInt(2, entity.getClass_id());
+		statement.setInt(1, currentConflict.getID());
+		statement.setInt(2, entity.getID());
 		
 	}
 
@@ -46,7 +46,7 @@ public class MilitaryActionLocationsUploader extends RelationUploader {
 		}
 		
 		// set conflict
-		this.currentConflict = (Conflict_entity) this.entityIt.next();
+		this.currentConflict = (ConflictEntity) this.entityIt.next();
 		
 		// list of locations
 		this.currentRelationList = this.currentConflict.getConflictLocations();

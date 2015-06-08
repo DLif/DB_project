@@ -1,6 +1,6 @@
 package db_parsers;
 
-import db_entities.Location_entity;
+import db_entities.AdministrativeLocationEntity;
 
 public class LiteralFactsParser extends FileParser {
 	
@@ -35,7 +35,7 @@ public class LiteralFactsParser extends FileParser {
 		String property = get_Entity_and_property(line,left_container);
 		String entity = left_container.toString();
 		
-		Location_entity loc = ParsedData.locationsMap.get(entity);
+		AdministrativeLocationEntity loc = ParsedData.locationsMap.get(entity);
 		if (loc == null){
 			return;
 		}
@@ -50,7 +50,7 @@ public class LiteralFactsParser extends FileParser {
 		String property = get_Entity_and_property(line,left_container);
 		String entity = left_container.toString();
 		
-		Location_entity loc = ParsedData.locationsMap.get(entity);
+		AdministrativeLocationEntity loc = ParsedData.locationsMap.get(entity);
 		if (loc == null){
 			return;
 		}

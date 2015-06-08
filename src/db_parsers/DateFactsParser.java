@@ -48,7 +48,7 @@ public class DateFactsParser extends FileParser {
 		String date = get_Entity_and_Date(line,left_container);
 		String entity = left_container.toString();
 		
-		Location_entity loc = ParsedData.locationsMap.get(entity);
+		AdministrativeLocationEntity loc = ParsedData.locationsMap.get(entity);
 		if (loc == null){
 			return;
 		}
@@ -63,7 +63,7 @@ public class DateFactsParser extends FileParser {
 		String date = get_Entity_and_Date(line,left_container);
 		String entity = left_container.toString();
 		
-		Location_entity loc = ParsedData.locationsMap.get(entity);
+		AdministrativeLocationEntity loc = ParsedData.locationsMap.get(entity);
 		if (loc == null){
 			return;
 		}
@@ -78,7 +78,7 @@ public class DateFactsParser extends FileParser {
 		String date = get_Entity_and_Date(line,left_container);
 		String entity = left_container.toString();
 		
-		Conflict_entity conflict = ParsedData.conflictMap.get(entity);
+		ConflictEntity conflict = ParsedData.conflictMap.get(entity);
 		if (conflict == null){
 			return;
 		}
@@ -93,7 +93,7 @@ public class DateFactsParser extends FileParser {
 		String date = get_Entity_and_Date(line,left_container);
 		String entity = left_container.toString();
 		
-		Leader_entity leader = ParsedData.leadersMap.get(entity);
+		LeaderEntity leader = ParsedData.leadersMap.get(entity);
 		if (leader == null){
 			return;
 		}
@@ -108,7 +108,7 @@ public class DateFactsParser extends FileParser {
 		String date = get_Entity_and_Date(line,left_container);
 		String entity = left_container.toString();
 		
-		Leader_entity leader = ParsedData.leadersMap.get(entity);
+		LeaderEntity leader = ParsedData.leadersMap.get(entity);
 		if (leader == null){
 			return;
 		}

@@ -9,26 +9,8 @@ import java.util.List;
 import java.util.Set;
 
 import upload.DBUploader.DBUploaderType;
-import upload.entities.AdminDivisionUploader;
-import upload.entities.BattleUploader;
-import upload.entities.CapitalCitiesUploader;
-import upload.entities.CityUploader;
-import upload.entities.ConstructionUploader;
-import upload.entities.ContinentUploader;
-import upload.entities.CountryUploader;
-import upload.entities.CurrencyUploader;
-import upload.entities.LanguageUploader;
-import upload.entities.LeaderUploader;
-import upload.entities.MilitaryActionUploader;
-import upload.entities.WarUploader;
-import upload.relations.AdminDivisionLeadersUploader;
-import upload.relations.LanguagesInCountriesUploader;
-import upload.relations.MilitaryActionLocationsUploader;
-import upload.relations.MilitaryParticipantsUploader;
-
-
 import db_entities.Entity;
-import db_parsers.ParsedData;
+
 
 /**
  * 
@@ -56,12 +38,6 @@ public class ParallelDBUploader implements Runnable {
 	
 	private DBUploaderType uploaderType;
 	
-	/**
-	 * number of entities that each thread will upload
-	 * number of threads is limited by number of available connections
-	 * by default, each batch will be threaded
-	 */
-	private int entitiesPerThread = DBUploader.BATCH_SIZE;
 	
 	
 	public ParallelDBUploader(Connection[] connections,
@@ -72,15 +48,7 @@ public class ParallelDBUploader implements Runnable {
 		this.uploaderType = uploaderType;
 	}
 	
-	public ParallelDBUploader(Connection[] connections,
-			  				  DBUploaderType uploaderType,
-			  				  int entitesPerThread
-			  					)
-	{
-		this(connections, uploaderType);
-		this.entitiesPerThread = entitesPerThread;
-		
-	}
+
 	
 	
 	
@@ -118,7 +86,7 @@ public class ParallelDBUploader implements Runnable {
 		// fill subCollections with at most subgroups as the number of connections
 		while(numGroups < connections.length && mainIterator.hasNext())
 		{
-			subGroup = nextSubCollection(mainIterator, this.entitiesPerThread);
+			subGroup = nextSubCollection(mainIterator, DBUploader.BATCH_SIZE);
 			subCollections.add(subGroup);
 			++numGroups;
 		}

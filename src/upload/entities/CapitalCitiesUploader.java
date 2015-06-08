@@ -6,8 +6,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Iterator;
 
-import db_entities.City_entity;
-import db_entities.Country_entity;
+import db_entities.CityEntity;
+import db_entities.CountryEntity;
 import db_entities.Entity;
 
 public class CapitalCitiesUploader extends EntityUploader{
@@ -27,19 +27,19 @@ public class CapitalCitiesUploader extends EntityUploader{
 	@Override
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
-		Country_entity country = (Country_entity) entity;
+		CountryEntity country = (CountryEntity) entity;
 		
-		City_entity capital = country.getCapital();
+		CityEntity capital = country.getCapital();
 		if(capital == null || !capital.isValid())
 		{
 			statement.setNull(1, Types.INTEGER);
 		}
 		else
 		{
-			statement.setInt(1, capital.getClass_id());
+			statement.setInt(1, capital.getID());
 		}
 		
-		statement.setInt(2, country.getClass_id());
+		statement.setInt(2, country.getID());
 		
 	}
 

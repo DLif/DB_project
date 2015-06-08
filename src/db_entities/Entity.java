@@ -3,26 +3,35 @@ package db_entities;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This object serves as a common father to all the entities that we shall save in the DB.
+ * It handles the entity name and id parts.
+ * Used as part of the parsing process only
+ * 
+ */
 
 
 public abstract class Entity implements java.io.Serializable{
 	
-	/**
-	 * This object serves as a common father to all the entities that we shall save in the DB.
-	 * It handles the entity name and id parts.
-	 */
-	
+
 	// this field is used for serialization
 	private static final long serialVersionUID = 1L; 
-	// The entity name. In the DB we save a string name for each entity. Only entities with name made from ascci characters will be accepted
+	
+	// The entity name. In the DB we save a string name for each entity.
+
 	public String name; 
-	public boolean valid_name = false;
-	public int class_id;
+	
+	// if false after name file parsing, then entity is invalid and will NOT be uploaded
+	// Only entities with  ASCII characters names will be uploaded
+	public boolean valid_name;
+	
+	// ID as stored in DB tables
+	public int dbID;
 	
 	
 	public Entity(){
-		name = null;
-		class_id = -1;
+		valid_name = false;
+		dbID = -1;
 	}
 
 	public String getName() {
@@ -39,21 +48,21 @@ public abstract class Entity implements java.io.Serializable{
 			this.name = null;
 			return;
 		}
-		valid = true;
+		valid_name = true;
 		this.name = name;
 	}
 
-	public int getClass_id() {
-		return class_id;
+	public int getID() {
+		return dbID;
 	}
 
 	public void setClass_id(int class_id) {
-		this.class_id = class_id;
+		this.dbID = class_id;
 	}
 	
 	public boolean isValid()
 	{
-		return this.valid;
+		return this.valid_name;
 	}
 	
 	protected static String removeNonEnglish(String input){

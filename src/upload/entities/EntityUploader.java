@@ -4,11 +4,6 @@
 package upload.entities;
 
 import db_entities.Entity;
-
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.nio.charset.CharacterCodingException;
-import java.nio.charset.Charset;
 import java.sql.*;
 
 import java.util.Iterator;

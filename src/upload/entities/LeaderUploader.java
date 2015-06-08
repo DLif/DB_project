@@ -5,12 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Iterator;
-
-import db_entities.Conflict_entity;
 import db_entities.Date;
 import db_entities.Entity;
-import db_entities.Leader_entity;
-import db_entities.Location_entity;
+import db_entities.LeaderEntity;
+import db_entities.AdministrativeLocationEntity;
 
 public class LeaderUploader extends EntityUploader{
 
@@ -28,7 +26,7 @@ public class LeaderUploader extends EntityUploader{
 	@Override
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
-		Leader_entity leader =  (Leader_entity) entity;
+		LeaderEntity leader =  (LeaderEntity) entity;
 		
 		statement.setString(1, sanitizeString(leader.getName()));
 		
@@ -36,18 +34,18 @@ public class LeaderUploader extends EntityUploader{
 		Integer genderBit = null;
 		if (leader.getLeaderGender() != null)
 		{
-			genderBit = leader.getLeaderGender() == Leader_entity.gender.male ? 0 : 1;
+			genderBit = leader.getLeaderGender() == LeaderEntity.gender.male ? 0 : 1;
 		}
 		statement.setObject(2, genderBit, Types.BIT);  
 		
 
-		Location_entity loc = leader.getBirthLocation();
+		AdministrativeLocationEntity loc = leader.getBirthLocation();
 		if(loc == null || !loc.isValid()) loc = null; 
-		statement.setObject(3, loc == null ? null : loc.getClass_id(), Types.INTEGER);
+		statement.setObject(3, loc == null ? null : loc.getID(), Types.INTEGER);
 		
 		loc = leader.getDeathLocation();
 		if(loc == null || !loc.isValid()) loc = null;
-		statement.setObject(4, loc == null ? null : loc.getClass_id(), Types.INTEGER);
+		statement.setObject(4, loc == null ? null : loc.getID(), Types.INTEGER);
 		
 		statement.setString(5, sanitizeString(leader.getWikiURL()));
 		statement.setInt(6, leader.getWikiLen());

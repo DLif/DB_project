@@ -7,7 +7,7 @@ import java.sql.Types;
 import java.util.Iterator;
 
 import db_entities.Entity;
-import db_entities.Location_entity;
+import db_entities.AdministrativeLocationEntity;
 
 public class AdminDivisionUploader extends EntityUploader {
 
@@ -29,7 +29,7 @@ public class AdminDivisionUploader extends EntityUploader {
 	@Override
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
-		Location_entity loc = (Location_entity) entity;
+		AdministrativeLocationEntity loc = (AdministrativeLocationEntity) entity;
 		statement.setString(1, sanitizeString(loc.getName()));
 		statement.setString(2, sanitizeString(loc.getMotto()));
 		

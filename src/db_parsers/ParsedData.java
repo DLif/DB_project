@@ -21,55 +21,55 @@ import db_entities.*;
 
 public class ParsedData {
 
-	public static Map<String, Conflict_entity> conflictMap;
-	public static Map<String, Location_entity> locationsMap;
-	public static Map<String, Language_entity> langugagesMap;
-	public static Map<String, Leader_entity> leadersMap;
-	public static Map<String, Continent_entity> continentsMap;
-	public static Map<String, Currency_entity> currenciesMap;
-	public static Map<String, Construction_entity> constructionsMap;
+	public static Map<String, ConflictEntity> conflictMap;
+	public static Map<String, AdministrativeLocationEntity> locationsMap;
+	public static Map<String, LanguageEntity> langugagesMap;
+	public static Map<String, LeaderEntity> leadersMap;
+	public static Map<String, ContinentEntity> continentsMap;
+	public static Map<String, CurrencyEntity> currenciesMap;
+	public static Map<String, ConstructionEntity> constructionsMap;
 	
 	
-	public static Set<Country_entity> getCountriesSet()
+	public static Set<CountryEntity> getCountriesSet()
 	{
-		Set<Country_entity> result = new HashSet<>();
-		for(Location_entity loc : locationsMap.values())
+		Set<CountryEntity> result = new HashSet<>();
+		for(AdministrativeLocationEntity loc : locationsMap.values())
 		{
-			if(loc instanceof Country_entity)
-				result.add((Country_entity)loc);
+			if(loc instanceof CountryEntity)
+				result.add((CountryEntity)loc);
 		}
 		return result;
 	}
 	
-	public static Set<City_entity> getCitiesSet()
+	public static Set<CityEntity> getCitiesSet()
 	{
-		Set<City_entity> result = new HashSet<>();
-		for(Location_entity loc : locationsMap.values())
+		Set<CityEntity> result = new HashSet<>();
+		for(AdministrativeLocationEntity loc : locationsMap.values())
 		{
-			if(loc instanceof City_entity)
-				result.add((City_entity)loc);
+			if(loc instanceof CityEntity)
+				result.add((CityEntity)loc);
 		}
 		return result;
 	}
 	
-	public static Set<War_entity> getWarsSet()
+	public static Set<WarEntity> getWarsSet()
 	{
-		Set<War_entity> result = new HashSet<>();
-		for(Conflict_entity war : conflictMap.values())
+		Set<WarEntity> result = new HashSet<>();
+		for(ConflictEntity war : conflictMap.values())
 		{
-			if(war instanceof War_entity)
-				result.add((War_entity)war);
+			if(war instanceof WarEntity)
+				result.add((WarEntity)war);
 		}
 		return result;
 	}
 	
-	public static Set<Battle_entity> getBattleSet()
+	public static Set<BattleEntity> getBattleSet()
 	{
-		Set<Battle_entity> result = new HashSet<>();
-		for(Conflict_entity battle : conflictMap.values())
+		Set<BattleEntity> result = new HashSet<>();
+		for(ConflictEntity battle : conflictMap.values())
 		{
-			if(battle instanceof Battle_entity)
-				result.add((Battle_entity)battle);
+			if(battle instanceof BattleEntity)
+				result.add((BattleEntity)battle);
 		}
 		return result;
 	}
@@ -88,13 +88,13 @@ public class ParsedData {
 	@SuppressWarnings("unchecked")
 	public static void deserializeMaps()
 	{
-		conflictMap = (Map<String, Conflict_entity>) deserializeObject("conflicts.ser");
-		locationsMap = (Map<String, Location_entity>) deserializeObject("locations.ser");
-		langugagesMap = (Map<String, Language_entity>) deserializeObject("langs.ser");
-		leadersMap = (Map<String, Leader_entity>) deserializeObject("leaders.ser");
-		continentsMap = (Map<String, Continent_entity>) deserializeObject("continents.ser");
-		currenciesMap = (Map<String, Currency_entity>) deserializeObject("currencies.ser");
-		constructionsMap = (Map<String, Construction_entity>) deserializeObject("constructions.ser");
+		conflictMap = (Map<String, ConflictEntity>) deserializeObject("conflicts.ser");
+		locationsMap = (Map<String, AdministrativeLocationEntity>) deserializeObject("locations.ser");
+		langugagesMap = (Map<String, LanguageEntity>) deserializeObject("langs.ser");
+		leadersMap = (Map<String, LeaderEntity>) deserializeObject("leaders.ser");
+		continentsMap = (Map<String, ContinentEntity>) deserializeObject("continents.ser");
+		currenciesMap = (Map<String, CurrencyEntity>) deserializeObject("currencies.ser");
+		constructionsMap = (Map<String, ConstructionEntity>) deserializeObject("constructions.ser");
 	}
 	
 	private static void serializeObject(String fileName, Object object)

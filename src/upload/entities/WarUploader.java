@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Iterator;
 
-import db_entities.Conflict_entity;
+import db_entities.ConflictEntity;
 import db_entities.Entity;
 
 public class WarUploader extends EntityUploader {
@@ -25,8 +25,8 @@ public class WarUploader extends EntityUploader {
 	@Override
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
-		Conflict_entity conflict =  (Conflict_entity) entity;
-		statement.setInt(1, conflict.getClass_id());
+		ConflictEntity conflict =  (ConflictEntity) entity;
+		statement.setInt(1, conflict.getID());
 		
 	}
 	

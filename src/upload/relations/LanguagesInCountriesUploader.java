@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.Iterator;
 
 
-import db_entities.Country_entity;
+import db_entities.CountryEntity;
 import db_entities.Entity;
 
 
@@ -18,7 +18,7 @@ public class LanguagesInCountriesUploader extends RelationUploader{
 		
 	}
 	
-	private Country_entity currentCountry;
+	private CountryEntity currentCountry;
 	
 	@Override
 	protected String getQueryString() {
@@ -30,8 +30,8 @@ public class LanguagesInCountriesUploader extends RelationUploader{
 	@Override
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
-		statement.setInt(1, entity.getClass_id());
-		statement.setInt(2, currentCountry.getClass_id());
+		statement.setInt(1, entity.getID());
+		statement.setInt(2, currentCountry.getID());
 		
 	}
 
@@ -44,7 +44,7 @@ public class LanguagesInCountriesUploader extends RelationUploader{
 		}
 		
 		// set country
-		this.currentCountry = (Country_entity) this.entityIt.next();
+		this.currentCountry = (CountryEntity) this.entityIt.next();
 		
 		// list of languages spoken in country
 		this.currentRelationList = this.currentCountry.getLangs();
