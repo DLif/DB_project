@@ -13,10 +13,11 @@ import upload.DBUploader;
 
 
 /**
- * @author Denis
  * 
  * Uploads batches of entities to the DB
  * The uploader will upload BATCH_SIZE entities with each batch
+ * 
+ * handleGeneratedKeys will set entity ids as assigned by the DB, after uploading each batch
  *
  */
 public abstract class EntityUploader extends DBUploader {
@@ -63,7 +64,7 @@ public abstract class EntityUploader extends DBUploader {
 		while(keys.next())
 		{
 			/* set entity actual DB key */
-			currentEntityBatch[index].setClass_id(keys.getInt(1));
+			currentEntityBatch[index].setDbID(keys.getInt(1));
 			++index;
 		}
 		keys.close();

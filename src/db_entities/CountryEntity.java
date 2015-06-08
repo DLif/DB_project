@@ -3,20 +3,27 @@ package db_entities;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Entities represented by objects of this class are stored in the DB in the Country and AdministrativeDevision tables.
+ * (the CountryEntity part in Country and all the other parts in AdministrativeDevision)
+ */
+
 public class CountryEntity extends AdministrativeLocationEntity {
 	
-	/**
-	 * Entities represented by objects of this class are stored in the DB in the Country and AdministrativeDevision tables.
-	 * (the CountryEntity part in Country and all the other parts in AdministrativeDevision)
-	 */
+
 	
 	private static final long serialVersionUID = 693862924078146943L;
+	
 	//This field points to the city that is the capital of the country represented by this object
 	public CityEntity capital;
+	
 	//This field points to the continent in which the country represented by the object is located
 	public ContinentEntity locatedIn;
+	
 	//This field points to the currency used in this country
 	public CurrencyEntity hasCurrency;
+	
 	//This field hold a list of the official languages in this country 
 	public List<LanguageEntity> officialLanguage_lst;
 	

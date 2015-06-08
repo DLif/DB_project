@@ -53,8 +53,14 @@ public class Main {
 		if(DESERIALIZE)
 		{
 			System.out.println("Deserializing ..");
-			ParsedData.deserializeMaps();
-			System.out.println("Done.");
+			if(ParsedData.deserializeMaps())
+			{
+				System.out.println("Done.");
+			}
+			else
+			{
+				System.out.println("Deserialization failed, make sure serialization was previously performed");
+			}
 		}
 		else
 		{

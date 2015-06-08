@@ -16,7 +16,8 @@ import db_entities.Entity;
  * 
  * Wrapper class for DBUploader
  * Enables to parallelize batch uploads
- * for example, upload each batch on a different thread (limited by number of connections given)
+ * for example, upload each batch on a different thread using a different connection
+ * (limited by number of connections given)
  *
  */
 
@@ -35,7 +36,6 @@ public class ParallelDBUploader implements Runnable {
 	private Collection<? extends Entity> mainCollection;
 	
 	
-	
 	private DBUploaderType uploaderType;
 	
 	
@@ -50,7 +50,9 @@ public class ParallelDBUploader implements Runnable {
 	
 
 	
-	
+	/**
+	 * upload the data
+	 */
 	
 	@Override
 	public void run()
@@ -71,7 +73,9 @@ public class ParallelDBUploader implements Runnable {
 	
 	/**
 	 * upload next group of sub collections of entity collection iterated by mainIterator
-	 * at most connections.length threads will be created, each thread will upload at most entitiesPerThread entities
+	 * (at most connections.length sub collections, each of BATCH_SIZE)
+	 * at most connections.length threads will be created, each thread will upload a sub collection (a batch)
+	 * on a separate connection
 	 * 
 	 * @param mainIterator
 	 * @throws InterruptedException
@@ -87,6 +91,11 @@ public class ParallelDBUploader implements Runnable {
 		while(numGroups < connections.length && mainIterator.hasNext())
 		{
 			subGroup = nextSubCollection(mainIterator, DBUploader.BATCH_SIZE);
+			if(subGroup == null) 
+			{
+				// no valid entities were found
+				break;
+			}
 			subCollections.add(subGroup);
 			++numGroups;
 		}
@@ -95,7 +104,7 @@ public class ParallelDBUploader implements Runnable {
 		
 		
 		// each thread will run an uploader
-		// the uploader will upload a single batch
+		// the uploader will upload a single batch (on a separate connection)
 		for(int i = 0; i < subCollections.size(); ++ i)
 		{
 			threads[i] = new Thread(DBUploader.createUploader(subCollections.get(i).iterator(),

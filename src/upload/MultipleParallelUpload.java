@@ -7,7 +7,7 @@ import upload.ParallelDBUploader;
 
 /**
  * This class enables to run a sequence of uploads in an ordered fashion
- * Each upload in the sequence will be parallelized with ParallelDBUploader, using given connections array
+ * Each upload in the sequence will be parallelized with ParallelDBUploader, using given connections array.
  * Before each new upload a message from given messages array will be printed
  * 
  * Class implements runnable, thus can run on a different thread

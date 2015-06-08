@@ -1,10 +1,14 @@
 package db_entities;
 
+/**
+ * represents constructions entity, such as the Eiffel tower
+ * each construction must reside in a AdministrativeLocationEntity
+ *
+ */
+
 public class ConstructionEntity  extends Entity{
 
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 9106720767072754416L;
 	public String wikiURL;
 	public int wikiLen;
@@ -45,7 +49,8 @@ public class ConstructionEntity  extends Entity{
 	public boolean isValid()
 	{
 		// constructionLocation must be valid for this whole record must be valid
-		return constructionLocation.isValid() &&  super.isValid();
+		// constructions must be located somewhere, otherwise this record is uselss for our app
+		return constructionLocation.isValid() && super.isValid();
 	}
 	
 }

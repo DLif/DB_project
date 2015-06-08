@@ -10,7 +10,7 @@ import upload.DBUploader.DBUploaderType;
 import db_parsers.ParsedData;
 
 /**
- * This class is responsible to upload all data parsed to the DB
+ * This class is responsible to upload all parsed data to the DB
  * 
  * 
  * NOTES:
@@ -69,15 +69,6 @@ public class DBUpdater {
 	}
 	
 	
-	/**
-	 * in case of an error, will hold an error message
-	 */
-	private String errorMsg;
-	
-	public String getError()
-	{
-		return errorMsg;
-	}
 	
 	/**
 	 * progress information
@@ -132,7 +123,7 @@ public class DBUpdater {
 		}
 		
 		/**
-		 * get progress precentage
+		 * get progress percentage
 		 * @return
 		 */
 		public double toPrecentage()
@@ -174,6 +165,7 @@ public class DBUpdater {
 	 * 
 	 * NOTE: 
 	 * 		- all relations will be cleared before upload process (except users table)
+	 * 		- in case of any error, an exception will be thrown with the error message
 	 * @throws Exception 
 	 */
 	
@@ -455,6 +447,8 @@ private void initiateUpload() throws Exception
 	    		 stmt.executeUpdate(String.format("DELETE FROM %s", name));
 	    		// System.out.println("removed " + res + " rows from " + name);
 	    	 }
+	    	 
+	    	 stmt.execute("SET FOREIGN_KEY_CHECKS=1");
 	   
 	     }
 	     catch(SQLException ex)

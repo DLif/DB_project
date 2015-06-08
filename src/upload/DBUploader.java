@@ -30,17 +30,15 @@ import db_parsers.ParsedData;
 
 /**
  * 
- * @author Denis
  * 
  * Database Batch uploader
- * Uploads chunks of BATCH_SIZE batches to the DB
- * May be used with INSERT and UPDATE queries
+ * Uploads BATCH_SIZE batches to the DB
  * 
- * Recommended BATCH_SIZE for remote DB: 15000
+ * Recommended BATCH_SIZE for remote DB: 20000
  * 
  * 
  * NOTE:
- * 		this class itself will NOT multi-thread different batches, rather, they will be uploaded on the same thread
+ * 		this class itself will NOT multi-thread different batches, rather, they will be uploaded on the same thread.
  *      for multithreaded upload,  use ParallelDBUploader wrapper class
  *
  */
@@ -115,10 +113,11 @@ public void run()
 /**
  * Prints the time difference from now to the input time.
  */
-private void printTimeDiff(long time) {
+/*private void printTimeDiff(long time) {
 	time = (System.currentTimeMillis() - time) / 1000;
 	System.out.println("Took " + time + " seconds");
 }
+*/
 
 
 /**
@@ -151,7 +150,7 @@ protected abstract void postCommit(PreparedStatement stmt) throws SQLException;
  */
 protected void uploadBatch() {
 	
-	long time = System.currentTimeMillis();
+	//long time = System.currentTimeMillis();
 	try (PreparedStatement pstmt = constructPreparedStatement()) {
 
 		sqlConn.setAutoCommit(false);

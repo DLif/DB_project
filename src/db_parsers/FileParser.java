@@ -3,6 +3,19 @@ package db_parsers;
 import java.io.FileInputStream;
 import java.util.Scanner;
 
+
+/**
+ * This is a abstract class from which all the parsers inherit.
+ * 
+ * All the parsers work quit the same, and are started by calling the parseFile function.
+ * it in turn calls init() and then feeds each line (except the first, which is a description about the file) of the file to the filter function.
+ * 
+ * The filter function extracts the information from the given line ( the YAGO file structure allows us to extract information from each line separately).
+ * We parse from each line two entities and their relation or an entity and its properties (depending on the file).
+ * On this information we use a switch (if else chain in fact) to make the proper object (or objects or none), store them in maps, and fill their fields accordingly
+ */
+
+
 public abstract class FileParser {
 	
 	
@@ -14,14 +27,7 @@ public abstract class FileParser {
 	public static String labelsFile = "D:/yago/yagoLabels.tsv";
 	
 	/**
-	 * This is a abstract class from which all the parsers inherit.
-	 * 
-	 * All the parsers work quit the same, and are started by calling the parseFile function.
-	 * It in it turn calls init() and then feeds each line (except the first, which is a description about the file) of the file to the filter function.
-	 * 
-	 * The filter function extracts the information from the given line ( the YAGO file structure allows us to extract information from each line separately).
-	 * We pars from each line two entities and their relation or the entity and it's property (depends on the file).
-	 * On this information we use a switch (if else chain in fact) to make the proper object (or objects or none), fill them in the maps, and fill their fields accordingly
+	 * set to true while debugging, to print more details while parsing
 	 */
 	private static boolean VERBOSE = false;
 	
@@ -37,11 +43,10 @@ public abstract class FileParser {
 	 */
 	public abstract void filter(String line);
 	
-	/*
-	 * Parse given a YAGO file to extract the information from, by calling the filter function on each line..
-	 * returns true on success, false otherwise (if any errors occurred on the way, like unknown file)
+	/**
+	 * Parse given a YAGO file to extract the information from, by calling the filter function on each line.
 	 * @param filename
-	 * @throws Exception 
+	 * @throws Exception - in case an error is encountered
 	 */
 	public void parseFile(String filename) throws Exception
 	{
@@ -86,7 +91,7 @@ public abstract class FileParser {
 
 	}
 
-	/*
+	/**
 	 * This is a helper function for the different parsers.
 	 * It finds the nth_occurence of a substring in a string, and returns the index of where this nth_occurence is in the string.
 	 */
@@ -113,7 +118,7 @@ public abstract class FileParser {
 	}
 	
 	/**
-	 * Parse all .tsv files
+	 * Parse all YAGO .tsv files
 	 * @throws Exception 
 	 */
 	

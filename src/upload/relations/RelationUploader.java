@@ -10,6 +10,20 @@ import upload.DBUploader;
 
 import db_entities.Entity;
 
+
+/**
+ * 
+ * Responsible for uploading relation tables
+ * specifically many to many relations e.g. MilitaryActionLocations
+ * all these records are stored in one of the entities as a list
+ * 
+ * for example each MilitaryAction entity stores a list of locations it occurred at
+ * entityIt will iterate over MilitaryAction entities
+ * and each entity will expose its relation list (such as locations list), by calling nextRelationList()
+ * each such iteration creates a many to many record, and uploads it to the DB as a part of the batch
+ *
+ */
+
 public abstract class RelationUploader extends DBUploader {
 
 	public RelationUploader(Connection sqlConnection, Iterator<? extends Entity> entityIt) {

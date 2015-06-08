@@ -5,11 +5,15 @@ import java.util.HashMap;
 import db_entities.LeaderEntity;
 import db_entities.AdministrativeLocationEntity;
 
+
+/**
+ * This is the first run on the file, in which we collect only the leaders entities
+ * we do 2 runs because part of the information collected in FactsFileParserSecondRun is about leaders, 
+ * and if we don't know the whole list before running this parser, we might miss some of the information
+ */
+
 public class FactsFileParserFirstRun extends FileParser {
-	/*
-	 * This is the second run on the file, in which we collect only the leaders entities
-	 * we do 2 runs because part of the information collected in FactsFileParserSecondRun is about leaders, and if we don't know the whole list before running this class, we might miss some of the information
-	 */
+
 	
 	public static int isLeaderOfNum = 0;
 	

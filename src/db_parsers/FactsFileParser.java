@@ -4,20 +4,11 @@ import java.util.HashMap;
 
 import db_entities.*;
 
-
-/**
- * This is the second run on the file, in which we collect all the required data from the file,
- * except leaders entities which were collected in the first run
- * we do 2 runs because part of the information collected by this parser is about leaders, and if we don't know the whole list before running this class, we might miss some of the information
- */
-
-
-public class FactsFileParserSecondRun extends FileParser{
+public class FactsFileParser extends FileParser{
 	
-	
-	//numbers for statistics 
 	public static int happenedInNum = 0;
 	public static int participatedInNum = 0 ;
+	public static int isLeaderOfNum = 0;
 	public static int locatedInNum = 0;
 	public static int hasCapitalNum = 0;
 	public static int hasCurrencyNum = 0;
@@ -27,10 +18,10 @@ public class FactsFileParserSecondRun extends FileParser{
 	public static int bornInNum = 0;
 	public static int hasGenderNum = 0;
 	
-	//The relations that are in this file and are of interest to us
-	//from some of this relations we get a new entities, like leaders and currencies
+	
 	static String happenedIn_relation = "<happenedIn>";
 	static String participatedIn_relation = "<participatedIn>";
+	static String isLeaderOf_relation = "<isLeaderOf>";
 	static String locatedIn_relation = "<isLocatedIn>";
 	static String hasCapital_relation = "<hasCapital>";
 	static String hasCurrency_relation = "<hasCurrency>";
@@ -43,17 +34,11 @@ public class FactsFileParserSecondRun extends FileParser{
 
 
 	public void init() {
-		//init the maps for the entities we gather from this file
+		// For the meanwhile each entity holds the relation between each other.This might change
 		ParsedData.leadersMap = new HashMap<String,LeaderEntity>(3000);
 		ParsedData.constructionsMap = new HashMap<String,ConstructionEntity>();
 	}
 
-	/*
-	 * Pars the string line and switch over the type of the relation between entities.
-	 * Fill the fields of the objects accordingly and make the new entities in the proper cases.
-	 * 
-	 * (*) for each case, the switch  calls the function the handles that specific case
-	 */
 	public void filter(String line){
 		int indexEntityStart = FileParser.nth_occurence(3,line,"<");
 		
@@ -67,6 +52,10 @@ public class FactsFileParserSecondRun extends FileParser{
 		else if(relation.contains(participatedIn_relation)){
 			
 			participatedInRelation_mapSetter(line);
+		}
+		else if(relation.contains(isLeaderOf_relation)){
+			
+			isLeaderOfRelation_mapSetter(line);
 		}
 		else if(relation.contains(locatedIn_relation)){
 			
@@ -97,9 +86,6 @@ public class FactsFileParserSecondRun extends FileParser{
 		
 	}
 
-	/*
-	 * set gender to leader - if the tag is a leader
-	 */
 	private void hasGender_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -121,63 +107,54 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set death date to leader
-	 */
 	private void diedIn_mapSetter(String line) {
-			//now get the two entities related
-			StringBuilder left_container = new StringBuilder();
-			String right_entity = get_Left_Right_Entities(line,left_container);
-			String left_entity = left_container.toString();
+		//now get the two entities related
+		StringBuilder left_container = new StringBuilder();
+		String right_entity = get_Left_Right_Entities(line,left_container);
+		String left_entity = left_container.toString();
 
-			//now get the proper objects from the maps and set relation reference
-			AdministrativeLocationEntity location = ParsedData.locationsMap.get(right_entity);
-				
-			if (location == null) {
+		//now get the proper objects from the maps and set relation reference
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(right_entity);
+			
+		if (location == null) {
+			return;
+		}
+		else {
+			LeaderEntity leader = ParsedData.leadersMap.get(left_entity);
+			if (leader == null){
 				return;
 			}
 			else {
-				LeaderEntity leader = ParsedData.leadersMap.get(left_entity);
-				if (leader == null){
-					return;
-				}
-				else {
 				diedInNum++;
 				leader.setDeathLocation(location);
-				}
 			}
 		}
+	}
 
-	/*
-	 * set birth date to leader
-	 */
 	private void bornIn_mapSetter(String line) {
-			//now get the two entities related
-			StringBuilder left_container = new StringBuilder();
-			String right_entity = get_Left_Right_Entities(line,left_container);
-			String left_entity = left_container.toString();
+		//now get the two entities related
+		StringBuilder left_container = new StringBuilder();
+		String right_entity = get_Left_Right_Entities(line,left_container);
+		String left_entity = left_container.toString();
 
-			//now get the proper objects from the maps and set relation reference
-			AdministrativeLocationEntity location = ParsedData.locationsMap.get(right_entity);
-				
-			if (location == null) {
+		//now get the proper objects from the maps and set relation reference
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(right_entity);
+			
+		if (location == null) {
+			return;
+		}
+		else {
+			LeaderEntity leader = ParsedData.leadersMap.get(left_entity);
+			if (leader == null){
 				return;
 			}
 			else {
-				LeaderEntity leader = ParsedData.leadersMap.get(left_entity);
-				if (leader == null){
-					return;
-				}
-				else {
 				bornInNum++;
 				leader.setBreathLocation(location);
 			}
 		}
 	}
 
-	/*
-	 * set (and make object for) interesting construction 
-	 */
 	private void owns_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -200,9 +177,6 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set official language to a country
-	 */
 	private void hasOfficialLanguage_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -227,9 +201,6 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set currency to country
-	 */
 	private void hasCurrencyRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -254,9 +225,6 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set conflicted happened in location
-	 */
 	private void happnedInRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -280,9 +248,6 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set the city/country as a participent in a conflict
-	 */
 	private void participatedInRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -306,11 +271,31 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * handles 2 cases:
-	 * 1-set for cities the country in which they located
-	 * 2-set for a country the continent in which it is located
-	 */
+	private void isLeaderOfRelation_mapSetter(String line) {
+		//now get the two entities related
+		StringBuilder left_container = new StringBuilder();
+		String right_entity = get_Left_Right_Entities(line,left_container);
+		String left_entity = left_container.toString();
+		
+		//now get the proper objects from the maps and set relation reference
+		AdministrativeLocationEntity location = ParsedData.locationsMap.get(right_entity);
+			
+		if (location == null) {
+			return;
+		}
+		else {
+			isLeaderOfNum++;
+			if (ParsedData.leadersMap.get(left_entity) != null){
+				ParsedData.leadersMap.get(left_entity).addLeaderOf(location);
+			}
+			else { //make the new leader and add his relation and to map
+				LeaderEntity leaderOfLocation = new LeaderEntity();
+				leaderOfLocation.addLeaderOf(location);
+				ParsedData.leadersMap.put(left_entity,leaderOfLocation);
+			}
+		}
+	}
+
 	private void locatedInRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -350,9 +335,6 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set for a country it's capital city
-	 */
 	private void hasCapitalRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -376,8 +358,6 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 	
-	//A parsing helper function
-	// form <A> <relation> <B> will return A in the return value and B in left_entity
 	//This function will return the right entity and return by reference the left one in 
 	private String get_Left_Right_Entities(String line,StringBuilder left_entity){
 		

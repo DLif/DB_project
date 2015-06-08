@@ -6,7 +6,7 @@ public class Date implements java.io.Serializable{
 	
 	
 	/**
-	 * This class saves and handles the date information for the diffirent entities 
+	 * This class saves and handles the date information for the different entities 
 	 */
 	private static final long serialVersionUID = 484779117704881080L;
 	
@@ -81,7 +81,8 @@ public class Date implements java.io.Serializable{
 	}
 	
 	/*
-	 * This function resizes the string in which the date given by YAGO (in their format) is given, parse it and returns a Date object which represents this date.
+	 * This function resizes the string in which the date given by YAGO (in their format) is given,
+	 * parses it and returns a Date object which represents this date.
 	 * 
 	 * The inputs given looks like "-63-##-##" and "1936-##-##".
 	 * # represents missing data from this date
