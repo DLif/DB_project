@@ -6,10 +6,9 @@ public class Date implements java.io.Serializable{
 	
 	
 	/**
-	 * 
+	 * This class saves and handles the date information for the diffirent entities 
 	 */
 	private static final long serialVersionUID = 484779117704881080L;
-	// Format "1951-##-##"^^xsd:date
 	
 	
 	public Short year; 
@@ -22,6 +21,8 @@ public class Date implements java.io.Serializable{
 		this.day = day;
 		
 	}
+	
+	//Getter functions - will return null for empty/invalid fields
 	
 	public Short getYear(){
 		return year;
@@ -45,6 +46,13 @@ public class Date implements java.io.Serializable{
 		}
 	}
 	
+	
+	//This function returns a pretty print of the date object in the format : 
+	//	Up to 4 characters year, which may be negative.( if doesn't exist then the string YYYY will be put instead) 
+	//	"-" 
+	//	2 characters for month.( if doesn't exist then the string MM will be put instead) 
+	//	"-" 
+	//	2 characters for day.( if doesn't exist then the string DD will be put instead) 
 	public String toString(){
 		StringBuilder str_date = new StringBuilder();
 		
@@ -72,9 +80,13 @@ public class Date implements java.io.Serializable{
 		return str_date.toString();
 	}
 	
-	//the string format is "-63-##-##"^^xsd:date and "1936-##-##"^^xsd:date
-	//this function get it in YYXX-MM-DD form
-	//this function cut the string by the delimiter and call CTOR with correct types
+	/*
+	 * This function resizes the string in which the date given by YAGO (in their format) is given, parse it and returns a Date object which represents this date.
+	 * 
+	 * The inputs given looks like "-63-##-##" and "1936-##-##".
+	 * # represents missing data from this date
+	 */
+
 	public static Date DateString_to_Date(String dateStr){
 		Short year;
 		Byte month;

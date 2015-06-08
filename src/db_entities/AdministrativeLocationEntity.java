@@ -6,16 +6,24 @@ import java.util.List;
 public abstract class AdministrativeLocationEntity extends Entity{
 	
 	/**
-	 * 
+	 * This is an abstract parent class for the city and country entities.
+	 * All the information held within the objects of this class will go to a record in AdministrativeDevision.
 	 */
-	private static final long serialVersionUID = -7851980978517013596L;
 	
+	private static final long serialVersionUID = -7851980978517013596L;
+	//The location motto (if it has any)
 	public String Motto; 
+	//The number of pepole which live in this location
 	public Long population; 
+	//A list of important constructions that belongs to the location
 	public List<ConstructionEntity> constructions_lst;
+	//The city/country foundation date
 	public Date foundationDate;
+	//The city/country destruction date (if it doen't exist anymore)
 	public Date destructionDate;
+	// A Wikipedia link to the article about this location
 	public String wikiURL;
+	// The length of the Wikipedia article about this location
 	public Integer wikiLen;
 	
 
@@ -107,10 +115,6 @@ public abstract class AdministrativeLocationEntity extends Entity{
 	
 	public void addConstruction(ConstructionEntity construction){
 		constructions_lst.add(construction);
-	}
-	
-	public ConstructionEntity getConstructionExample(){
-		return constructions_lst.get(0);
 	}
 	
 	public void setPopulation(long l){

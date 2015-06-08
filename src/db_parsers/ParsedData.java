@@ -15,6 +15,8 @@ import db_entities.*;
 /**
  * 
  * Holds all parsed data in map data structures
+ * 
+ * and the function for serializing/deserializing it
  *
  */
 

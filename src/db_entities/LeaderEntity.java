@@ -6,16 +6,26 @@ import java.util.List;
 public class LeaderEntity  extends Entity{
 	
 	/**
-	 * 
+	 * This object holds the information the concerns the leaders in the DB.
+	 * Each object will become a record in the Leader table.
 	 */
+	
 	private static final long serialVersionUID = 1131360996928809312L;
+	//The list of administrative location that this leader led in the past, or is leading in the presnt
 	public List<AdministrativeLocationEntity> leads;
+	//A pointer to the leader birth location
 	public AdministrativeLocationEntity birthLocation;
+	//A pointer to the leader death location
 	public AdministrativeLocationEntity deathLocation;
+	// The leaders gender (enum type)
 	public gender leaderGender;
+	// birth date
 	public Date bornDate;
+	// the leader's death date
 	public Date deathDate;
+	// A Wikipedia link to the article about this leader
 	public String wikiURL;
+	// The length of the Wikipedia article about this leader
 	public int wikiLen;
 
 	public LeaderEntity() {
@@ -94,6 +104,7 @@ public class LeaderEntity  extends Entity{
 		this.leaderGender = leaderGender;
 	}
 
+	//A enum declaration. Used for the gender field
 	public enum gender{
 		male,female
 	}
