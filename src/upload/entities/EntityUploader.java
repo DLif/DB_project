@@ -4,6 +4,11 @@
 package upload.entities;
 
 import db_entities.Entity;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
 import java.sql.*;
 
 import java.util.Iterator;
@@ -50,18 +55,7 @@ public abstract class EntityUploader extends DBUploader {
 		return this.entityIt.hasNext();
 	}
 	
-	@Override
-	protected void createBatch()
-	{
-		int amount = 0;
-		while(amount < BATCH_SIZE && entityIt.hasNext())
-		{
-			currentEntityBatch[amount] = entityIt.next();
-			++amount;
-			
-		}
-		this.actualBatchSize = amount;
-	}
+	
 	
 	/**
 	 * Assigns each id in the set to the corresponding Entity object
@@ -108,17 +102,26 @@ public abstract class EntityUploader extends DBUploader {
 	
 	/**
 	 * Fills the statement object with the information from each entity object in current batch
+	 * This will also store current batch entities in currentEntityBatch array, to set their IDs later
 	 * @param stmt
 	 * @throws SQLException
 	 */
 	@Override
 	protected void prepareBatch(PreparedStatement stmt) throws SQLException
 	{
-		for(int i = 0; i < this.actualBatchSize; ++i)
+		
+		int amount = 0;
+		while(amount < BATCH_SIZE && entityIt.hasNext())
 		{
-			setStatementArgs(stmt, this.currentEntityBatch[i]);
+			currentEntityBatch[amount] = entityIt.next();
+			if(!currentEntityBatch[amount].isValid()) continue;
+			
+			setStatementArgs(stmt, this.currentEntityBatch[amount]);
 			stmt.addBatch();
+			++amount;
+			
 		}
+		this.actualBatchSize = amount;
 	}
 	
 	
@@ -127,10 +130,13 @@ public abstract class EntityUploader extends DBUploader {
 	 * @param statement
 	 * @param entity
 	 * @throws SQLException
+	 
 	 */
 	
 	protected void setStatementArgs(PreparedStatement statement, Entity entity) throws SQLException
 	{
+		
+		
 		statement.setString(1, sanitizeString(entity.getName()));
 	}
 	
@@ -145,6 +151,7 @@ public abstract class EntityUploader extends DBUploader {
 	{
 		if(str == null)
 			return null;
+
 		str = str.replaceAll("'", "''");
 		if(str.length() >= VARCHAR_LEN)
 		{
@@ -153,6 +160,7 @@ public abstract class EntityUploader extends DBUploader {
 		return str;
 	}
 	
+
 	
 
 	

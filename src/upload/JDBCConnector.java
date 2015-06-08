@@ -8,8 +8,28 @@ import java.sql.*;
  */
 public class JDBCConnector {
 	
+	/**
+	 * load the JDBC driver
+	 * @return true on success
+	 */
+	private static boolean registerJDBC()
+	{
+		
+		try {
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e) {
+			System.out.println("Unable to load the MySQL JDBC driver..");
+			return false;
+		}
+		System.out.println("Driver loaded successfully");
+		
+		driverLoaded = true;
+		return true;
+	}
 	
-	public Connection conn; 
+	private static boolean driverLoaded = false;
+	
+	private Connection conn; 
 
 	/**
 	 * Empty constructor
@@ -22,19 +42,19 @@ public class JDBCConnector {
 	 * 
 	 * @return true if the connection was successfully set
 	 */
-	public boolean openConnection(String host, String port, String schema, String username, String password) {
+	public boolean openConnection(String host, String port, String schema, String username, String password, boolean verbose) {
 
-		// loading the driver
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e) {
-			System.out.println("Unable to load the MySQL JDBC driver..");
-			return false;
+		if(!driverLoaded)
+		{
+			if(!registerJDBC())
+			{
+				return false;
+			}
 		}
-		System.out.println("Driver loaded successfully");
-
+		
 		// creating the connection
-		System.out.print("Trying to connect... ");
+		
+		if(verbose) System.out.print("Trying to connect... ");
 		try {
 			conn = DriverManager.getConnection(
 					String.format("jdbc:mysql://%s:%s/%s", host, port, schema), username, password);
@@ -43,7 +63,7 @@ public class JDBCConnector {
 			conn = null;
 			return false;
 		}
-		System.out.println("Connected!");
+		if(verbose) System.out.println("Connected!");
 		return true;
 	}
 
@@ -60,7 +80,36 @@ public class JDBCConnector {
 
 	}
 
-	
+	/**
+	 * Attempts to set the connection back to/from auto-commit, ignoring errors.
+	 */
+	public void safelySetAutoCommit(boolean auto_commit) {
+		try {
+			conn.setAutoCommit(auto_commit);
+		} catch (Exception e) {
+		}
+	}
 
+	/**
+	 * Attempts to rollback, ignoring errors.
+	 */
+
+	public void safelyRollBack()
+	{
+		try {
+			conn.rollback();
+		}
+		catch(Exception e)
+		{
+			System.out.println("Failed to rollback!");
+		}
+	}
+	
+	public Connection getConnection()
+	{
+		return this.conn;
+	}
+
+	
 
 }

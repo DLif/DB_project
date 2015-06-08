@@ -49,12 +49,6 @@ public abstract class RelationUploader extends DBUploader {
 	 */
 	protected abstract void nextRelationList();
 	
-	@Override
-	protected void createBatch()
-	{
-		// do nothing, prepareBatch() takes cares of it
-	
-	}
 	
 	@Override
 	protected void postCommit(PreparedStatement stmt) throws SQLException
@@ -105,8 +99,16 @@ public abstract class RelationUploader extends DBUploader {
 				currentIndex = 0;
 			}
 			
+			Entity currentEntity = this.currentRelationList.get(currentIndex);
+			if(!currentEntity.isValid())
+			{
+				// need to skip entity
+				this.currentIndex ++;
+				continue;
+			}
+			
 			// add tuple to batch and advance to next index
-			setStatementArgs(stmt, this.currentRelationList.get(currentIndex));
+			setStatementArgs(stmt, currentEntity);
 			stmt.addBatch();
 			this.currentIndex++;   // list index
 			index++;               // batch index

@@ -31,12 +31,22 @@ public class LeaderUploader extends EntityUploader{
 		Leader_entity leader =  (Leader_entity) entity;
 		
 		statement.setString(1, sanitizeString(leader.getName()));
-		statement.setObject(2, 0, Types.BIT);  // change later
 		
+		// denote male as 0, female as 1, no support for enums in JDBC
+		Integer genderBit = null;
+		if (leader.getLeaderGender() != null)
+		{
+			genderBit = leader.getLeaderGender() == Leader_entity.gender.male ? 0 : 1;
+		}
+		statement.setObject(2, genderBit, Types.BIT);  
+		
+
 		Location_entity loc = leader.getBirthLocation();
+		if(loc == null || !loc.isValid()) loc = null; 
 		statement.setObject(3, loc == null ? null : loc.getClass_id(), Types.INTEGER);
 		
 		loc = leader.getDeathLocation();
+		if(loc == null || !loc.isValid()) loc = null;
 		statement.setObject(4, loc == null ? null : loc.getClass_id(), Types.INTEGER);
 		
 		statement.setString(5, sanitizeString(leader.getWikiURL()));

@@ -32,7 +32,7 @@ public class CountryUploader extends ConstEntityUploader {
 		Country_entity country = (Country_entity) entity;
 		statement.setInt(1, country.getClass_id());
 		Continent_entity continent = country.getContinent();
-		if(continent == null)
+		if(continent == null || !continent.isValid())
 		{
 			statement.setNull(2, Types.INTEGER);
 		}
@@ -43,7 +43,7 @@ public class CountryUploader extends ConstEntityUploader {
 		}
 		
 		Currency_entity currency = country.getCurrency();
-		if(currency == null)
+		if(currency == null || !currency.isValid())
 		{
 			statement.setNull(3, Types.INTEGER);
 		}

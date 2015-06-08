@@ -31,7 +31,7 @@ public class CityUploader extends ConstEntityUploader {
 		statement.setInt(1, city.getClass_id());
 		
 		Country_entity country = city.getCountry();
-		if(country == null)
+		if(country == null || !country.isValid())
 		{
 			statement.setNull(2, Types.INTEGER);
 		}

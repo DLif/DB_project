@@ -22,6 +22,7 @@ public class Leader_entity  extends Entity{
 		super(name);
 		leads = new ArrayList<Location_entity>();
 		wikiLen = 0;
+		leaderGender = null;
 	}
 	
 	public int getWikiLen() {

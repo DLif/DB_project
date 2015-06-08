@@ -3,8 +3,28 @@ package upload;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Iterator;
 
 
+import upload.entities.AdminDivisionUploader;
+import upload.entities.BattleUploader;
+import upload.entities.CapitalCitiesUploader;
+import upload.entities.CityUploader;
+import upload.entities.ConstructionUploader;
+import upload.entities.ContinentUploader;
+import upload.entities.CountryUploader;
+import upload.entities.CurrencyUploader;
+import upload.entities.LanguageUploader;
+import upload.entities.LeaderUploader;
+import upload.entities.MilitaryActionUploader;
+import upload.entities.WarUploader;
+import upload.relations.AdminDivisionLeadersUploader;
+import upload.relations.LanguagesInCountriesUploader;
+import upload.relations.MilitaryActionLocationsUploader;
+import upload.relations.MilitaryParticipantsUploader;
+import db_entities.Entity;
+import db_parsers.ParsedData;
 
 
 
@@ -17,10 +37,15 @@ import java.sql.SQLException;
  * May be used with INSERT and UPDATE queries
  * 
  * Recommended BATCH_SIZE for remote DB: 15000
+ * 
+ * 
+ * NOTE:
+ * 		this class itself will NOT multi-thread different batches, rather, they will be uploaded on the same thread
+ *      for multithreaded upload,  use ParallelDBUploader wrapper class
  *
  */
 
-public abstract class DBUploader {
+public abstract class DBUploader implements Runnable {
 
 	
 /**
@@ -68,10 +93,8 @@ public boolean upload()
 {
 	while(!error && hasMore())
 	{
-		// more objects left to upload, prepare the batch
-		createBatch();
 		
-		// upload the batch
+		// upload a batch
 		uploadBatch();
 	}
 	
@@ -81,15 +104,12 @@ public boolean upload()
 	}
 	return true;
 }
-;
 
 
-/**
- * Create the next batch, actualBatchSize will contain the amount of elements in the batch
- */
-
-protected abstract void createBatch();
-
+public void run()
+{
+	upload();
+}
 
 
 /**
@@ -122,10 +142,8 @@ protected abstract void prepareBatch(PreparedStatement stmt) throws SQLException
  * perhaps do something after commit (for example: handling keys)
  * @param stmt
  */
-protected void postCommit(PreparedStatement stmt) throws SQLException
-{
-	// do nothing
-}
+protected abstract void postCommit(PreparedStatement stmt) throws SQLException;
+
 
 
 /**
@@ -155,6 +173,7 @@ protected void uploadBatch() {
 		safelySetAutoCommit();
 	}
 }
+
 
 
 /**
@@ -188,6 +207,137 @@ private void safelyRollBack()
  * 						  or UPDATE ...
  */
 protected abstract String getQueryString();
+
+
+/**
+ * 
+ * All existing DBUploader types
+ *
+ */
+public enum DBUploaderType
+{
+	AdminDivision,
+	Battle,
+	CapitalCities,
+	City,
+	Construction,
+	Continent,
+	Country,
+	Currency,
+	Language,
+	Leader,
+	MilitaryAction,
+	War,
+	AdminDivisionLeaders,
+	LanguagesInCountries,
+	MilitaryActionLocations,
+	MilitaryParticipants
+	
+}
+
+
+/**
+ * DBUploader factory method
+ * 
+ * @param partialEntityIterator - iterator over collection of entities to upload
+ * @param connection            - connection to be used by the upload
+ * @param type                  - type of uploader, see enum above
+ * @return the created uploader object
+ */
+public static DBUploader createUploader(Iterator<? extends Entity> partialEntityIterator,
+										 Connection connection,
+										 DBUploaderType type)
+{
+	switch(type)
+	{
+	case AdminDivision:
+		return new AdminDivisionUploader(connection, partialEntityIterator);
+	case Battle:
+		return new BattleUploader(connection, partialEntityIterator);
+	case CapitalCities:
+		return new CapitalCitiesUploader(connection, partialEntityIterator);
+	case City:
+		return new CityUploader(connection, partialEntityIterator);
+	case Construction:
+		return new ConstructionUploader(connection, partialEntityIterator);
+	case Continent:
+		return new ContinentUploader(connection, partialEntityIterator);
+	case Country:
+		return new CountryUploader(connection, partialEntityIterator);
+	case Currency:
+		return new CurrencyUploader(connection, partialEntityIterator);
+	case Language:
+		return new LanguageUploader(connection, partialEntityIterator);
+	case Leader:
+		return new LeaderUploader(connection, partialEntityIterator);
+	case MilitaryAction:
+		return new MilitaryActionUploader(connection, partialEntityIterator);
+	case War:
+		return new WarUploader(connection, partialEntityIterator);
+	case AdminDivisionLeaders:
+		return new AdminDivisionLeadersUploader(connection, partialEntityIterator);
+	case LanguagesInCountries:
+		return new LanguagesInCountriesUploader(connection, partialEntityIterator);
+	case MilitaryActionLocations:
+		return new MilitaryActionLocationsUploader(connection, partialEntityIterator);
+	case MilitaryParticipants:
+		return new MilitaryParticipantsUploader(connection, partialEntityIterator);
+
+	}
+	
+	return null;
+}
+
+/**
+ * 
+ * Get collection of entities that are required by given DBUploader type (both for relations and entities uploaders)
+ * 
+ * @param   type - type of UPloader
+ * @return  the collection of entities required by the uploader, generated by the parser
+ */
+
+public static Collection<? extends Entity> getAllEntities(DBUploaderType type)
+{
+	switch(type)
+	{
+	case AdminDivision:
+		return ParsedData.locationsMap.values();
+	case Battle:
+		return ParsedData.getBattleSet();
+	case CapitalCities:
+		return ParsedData.getCountriesSet();
+	case City:
+		return ParsedData.getCitiesSet();
+	case Construction:
+		return ParsedData.constructionsMap.values();
+	case Continent:
+		return ParsedData.continentsMap.values();
+	case Country:
+		return  ParsedData.getCountriesSet();
+	case Currency:
+		return  ParsedData.currenciesMap.values();
+	case Language:
+		return  ParsedData.langugagesMap.values();
+	case Leader:
+		return 	ParsedData.leadersMap.values();
+	case War:
+		return  ParsedData.getWarsSet();
+	case AdminDivisionLeaders:
+		return  ParsedData.leadersMap.values();
+	case LanguagesInCountries:
+		return  ParsedData.getCountriesSet();
+		
+	case MilitaryAction:
+	case MilitaryActionLocations:
+	case MilitaryParticipants:
+		return   ParsedData.conflictMap.values();
+
+	}
+	
+	return null;
+	
+}
+
 
 
 }

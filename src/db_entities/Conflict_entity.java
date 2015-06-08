@@ -18,7 +18,6 @@ public abstract class Conflict_entity extends Entity{
 	Conflict_entity(String name){
 		super(name);
 		
-		// I assume that eventually any location will have conflict Locations and conflict participants so can init in CTOR 
 		conflictLocations = new ArrayList<Location_entity>(); 
 		conflictParticipants = new ArrayList<Location_entity>(); 
 		
@@ -71,19 +70,7 @@ public abstract class Conflict_entity extends Entity{
 		conflictParticipants.add(loc);
 	}
 	
-	public String getFistInconflictLocations(){
-		if (conflictLocations.isEmpty()){
-			return "EMPTY";
-		}
-		return conflictLocations.get(0).name;
-	}
-	
-	public String getFistInconflictParticipants(){
-		if (conflictParticipants.isEmpty()){
-			return "EMPTY";
-		}
-		return conflictParticipants.get(0).name;
-	}
+
 	
 	
 

@@ -30,7 +30,7 @@ public abstract class FileParser {
 		System.out.println("Parsing " + filename + " ..");
 		
 		try (FileInputStream inputStream = new FileInputStream(filename);
-			Scanner sc = new Scanner(inputStream);){
+			Scanner sc = new Scanner(inputStream, "UTF8");){
 
 			init();
 			// skip first line

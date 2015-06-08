@@ -54,7 +54,10 @@ public abstract class Location_entity extends Entity{
 
 
 	public void setMotto(String motto) {
-		Motto = motto;
+		
+		Motto = removeNonEnglish(motto);
+		if(Motto.equals(""))
+			Motto = null;
 	}
 
 

@@ -30,7 +30,7 @@ public class CapitalCitiesUploader extends EntityUploader{
 		Country_entity country = (Country_entity) entity;
 		
 		City_entity capital = country.getCapital();
-		if(capital == null)
+		if(capital == null || !capital.isValid())
 		{
 			statement.setNull(1, Types.INTEGER);
 		}

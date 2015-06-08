@@ -41,4 +41,11 @@ public class Construction_entity  extends Entity{
 		this.wikiURL = wikiURL;
 	}
 	
+	@Override
+	public boolean isValid()
+	{
+		// constructionLocation must be valid for this whole record must be valid
+		return constructionLocation.isValid() &&  super.isValid();
+	}
+	
 }
