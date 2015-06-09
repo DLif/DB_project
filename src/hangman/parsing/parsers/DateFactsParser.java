@@ -4,13 +4,23 @@ import hangman.parsing.entities.*;
 
 public class DateFactsParser extends FileParser {
 	
+	/**
+	 * This class does the parsing of the yagoDateFacts.tsv file.
+	 * 
+	 * line format in file:
+	 * connectionName_(uninteresting) entity dateType date_string_1 date string_2
+	 * <id_1omcmr_1xk_1og6foj>	<Cinzia_Giorgio>	<wasBornOnDate>	"1975-04-01"^^xsd:date	1975.0401
+	 */
 	
+	//this are used for statistics in debug
 	public static int wasBornOnDateNum = 0;
 	public static int diedOnDateNum = 0;
 	public static int happenedOnDateNum = 0;
 	public static int wasCreatedOnDateNum = 0;
 	public static int wasDestroyedOnDateNum = 0;
 	
+	//This are the different date relations of entities that we are interested in from this file
+	//They variable hold the string which is written as the relation type for the entity
 	static String wasBornOnDate_date ="<wasBornOnDate>";
 	static String diedOnDate_date ="<diedOnDate>";
 	static String happenedOnDate_date ="<happenedOnDate>";
@@ -18,8 +28,11 @@ public class DateFactsParser extends FileParser {
 	static String wasDestroyedOnDate_date ="<wasDestroyedOnDate>";
 	
 
-	public void init() {} //nothing to init for this file
+	public void init() {} //nothing to init for this file - no entities are added to maps while parsing the file 
 
+	/*
+	 * @see db_parsers.FileParser#filter(java.lang.String)
+	 */
 	public void filter(String line){
 		int indexEntityStart = FileParser.nth_occurence(3,line,"<");
 		String date_relation = line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1);
@@ -39,10 +52,17 @@ public class DateFactsParser extends FileParser {
 		else if (date_relation.contains(wasDestroyedOnDate_date)){
 			wasDestroyedOnDate_DateSet(line);
 		}
-		
-
 	}
-
+		
+	/*
+	 * These are handler functions for this parser
+	 * each of this functions checks if the "interesting" relation happens on a entity of the proper type.
+	 * If it does we make a date object with the given date in the string and set it to the field of the entity's object.
+	 * 
+	 * (*) Of course not every "interesting" relation is interesting for any type of entity. 
+	 * 		When we check that the relation happens on "a entity of the proper type" we take that into account.
+	 * 
+	 */
 	private void wasDestroyedOnDate_DateSet(String line) {
 		StringBuilder left_container = new StringBuilder();
 		String date = get_Entity_and_Date(line,left_container);
@@ -118,6 +138,11 @@ public class DateFactsParser extends FileParser {
 		}
 	}
 	
+	/* 
+	 * A parsing helper function
+	 * form <A> <relation> "B" will return B in the return value and A in entity
+	 * This function will return the date and return by reference the entity in the "entity" parameter
+	 */
 	private String get_Entity_and_Date(String line,StringBuilder entity){
 		int indexEntityStart = FileParser.nth_occurence(2,line,"<");
 		entity.append(line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1));

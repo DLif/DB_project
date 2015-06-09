@@ -17,7 +17,7 @@ import java.util.Set;
  * 
  * Holds all parsed data in map data structures
  * 
- * and the functions for serializing/deserializing it
+ * and the function for serializing/deserializing it
  *
  */
 

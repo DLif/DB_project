@@ -12,7 +12,7 @@ public class TransitiveTypeParser extends FileParser{
 	 * This class does the parsing of the yagoTransitiveType.tsv file.
 	 * 
 	 * line format in file:
-	 * connection name (uninteresting) entity "rdf:type"_string the_type_string
+	 * connectionName_(uninteresting) entity "rdf:type"_string the_type_string
 	 * <id_svyx35_88c_avbfa5>	<Kuldeep_Raval>	rdf:type	<wikicat_Delhi_Daredevils_cricketers>	
 	 */
 	
@@ -43,8 +43,7 @@ public class TransitiveTypeParser extends FileParser{
 	}
 	
 	/*
-	 * Pars the string line and switch over the type of the entity it.
-	 * Make a object according to the type (if it is of interest for the DB) and set it in the proper map
+	 * @see db_parsers.FileParser#filter(java.lang.String)
 	 */
 	public void filter(String line){
 		
@@ -105,7 +104,7 @@ public class TransitiveTypeParser extends FileParser{
 	
 	/*
 	 * This function return from the given line the tag that represent this entity in YAGO
-	 * We use the tag a a key in the maps
+	 * We use the tag a a key in the maps that holds the different entities
 	 */
 	private String getEntityTag(String line){
 		/* Calculate the entity name tag  */

@@ -4,15 +4,29 @@ import hangman.parsing.entities.AdministrativeLocationEntity;
 
 public class LiteralFactsParser extends FileParser {
 	
+	/**
+	 * This class does the parsing of the yagoLiteralFacts.tsv file.
+	 * 
+	 * line format in file:
+	 * connectionName_(uninteresting) entity dateType date_string_1 date string_2
+	 * <id_1oqmhl5_11k_1ggmwj4>	<Queen_Elizabeth's_High_School>	<hasMotto>	"Officium omnes adligat"
+	 */
+	
+	//this are used for statistics in debug
 	public static int hasNumberOfPeopleNum = 0;
 	public static int hasMottoNum = 0;
 	
+	//This are the different date relations of entities that we are interested in from this file
+	//They variable hold the string which is written as the relation type for the entity
 	public static String hasNumberOfPeople_property = "<hasNumberOfPeople>";
 	public static String hasMotto_property ="<hasMotto>";
 	
 
-	public void init() {} //nothing to init for this file
+	public void init() {} //nothing to init for this file - no entities are added to maps while parsing the file 
 
+	/*
+	 * @see db_parsers.FileParser#filter(java.lang.String)
+	 */
 	public void filter(String line) {
 		int indexEntityStart = FileParser.nth_occurence(3,line,"<");
 		if (indexEntityStart < 0 || line.indexOf(">", indexEntityStart+1) < 0){
@@ -29,6 +43,16 @@ public class LiteralFactsParser extends FileParser {
 		}
 
 	}
+	
+	/*
+	 * These are handler function for this parser 
+	 * each of this functions checks if the "interesting" relation happens on a entity of the proper type.
+	 * If it does we set the property numeric value proper fields in the object that represent the entity.
+	 * 
+	 * (*) Of course not every "interesting" relation is interesting for any type of entity. 
+	 * 		When we check that the relation happens on "a entity of the proper type" we take that into account.
+	 * 
+	 */
 
 	private void motto_attributeSet(String line) {
 		StringBuilder left_container = new StringBuilder();
@@ -60,6 +84,11 @@ public class LiteralFactsParser extends FileParser {
 		}
 	}
 	
+	/* 
+	 * A parsing helper function
+	 * form <A> <relation> "B" will return B in the return value and A in entity
+	 * This function will return the property and return by reference the entity in "entity" parameter
+	 */
 	private String get_Entity_and_property(String line,StringBuilder entity){
 		int indexEntityStart = FileParser.nth_occurence(2,line,"<");
 		entity.append(line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1));

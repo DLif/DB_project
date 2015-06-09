@@ -5,16 +5,18 @@ import hangman.parsing.entities.*;
 import java.util.HashMap;
 
 
-
-/**
- * This is the second run on the file, in which we collect all the required data from the file,
- * except leaders entities which were collected in the first run
- * we do 2 runs because part of the information collected by this parser is about leaders, and if we don't know the whole list before running this class, we might miss some of the information
- */
-
-
 public class FactsFileParserSecondRun extends FileParser{
 	
+	/**
+	 * This class does some of the parsing of the yagoFacts.tsv file.
+	 * 
+	 * This is the second run on the file, in which we collect all the required data from the file, except the leaders which were collected in the first run
+	 * we do 2 runs because part of the information collected in this class is about leaders, and if we don't know the whole list before running this class, we might miss some of the information.
+	 * 
+	 * line format in file:
+	 * connectionName_(uninteresting) entityLeft relationType entityRight
+	 * <id_jqyg1z_zkl_1xi58gi>	<Jefferson_County,_Texas>	<owns>	<Jack_Brooks_Regional_Airport>
+	 */
 	
 	//numbers for statistics 
 	public static int happenedInNum = 0;
@@ -45,15 +47,11 @@ public class FactsFileParserSecondRun extends FileParser{
 
 	public void init() {
 		//init the maps for the entities we gather from this file
-		ParsedData.leadersMap = new HashMap<String,LeaderEntity>(3000);
 		ParsedData.constructionsMap = new HashMap<String,ConstructionEntity>();
 	}
 
 	/*
-	 * Pars the string line and switch over the type of the relation between entities.
-	 * Fill the fields of the objects accordingly and make the new entities in the proper cases.
-	 * 
-	 * (*) for each case, the switch  calls the function the handles that specific case
+	 * @see db_parsers.FileParser#filter(java.lang.String)
 	 */
 	public void filter(String line){
 		int indexEntityStart = FileParser.nth_occurence(3,line,"<");
@@ -99,8 +97,16 @@ public class FactsFileParserSecondRun extends FileParser{
 	}
 
 	/*
-	 * set gender to leader - if the tag is a leader
+	 * These are handler function for this parser 
+	 * each of this functions checks if the "interesting" relation happens on a entity of the proper type.
+	 * If it does we set the proper fields in one of the objects that represent the entities in the line or make a new ConstructionEntity and add t to the list in administrativeLocation.
+	 * 
+	 * (*) Of course not every "interesting" relation is interesting for any type of entity. 
+	 * 		When we check that the relation happens on "a entity of the proper type" we take that into account.
+	 * 
 	 */
+	
+	
 	private void hasGender_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -122,9 +128,8 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set death date to leader
-	 */
+
+
 	private void diedIn_mapSetter(String line) {
 			//now get the two entities related
 			StringBuilder left_container = new StringBuilder();
@@ -149,9 +154,8 @@ public class FactsFileParserSecondRun extends FileParser{
 			}
 		}
 
-	/*
-	 * set birth date to leader
-	 */
+
+
 	private void bornIn_mapSetter(String line) {
 			//now get the two entities related
 			StringBuilder left_container = new StringBuilder();
@@ -176,9 +180,8 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set (and make object for) interesting construction 
-	 */
+
+
 	private void owns_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -201,9 +204,8 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set official language to a country
-	 */
+
+
 	private void hasOfficialLanguage_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -228,9 +230,8 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set currency to country
-	 */
+
+
 	private void hasCurrencyRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -255,9 +256,8 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set conflicted happened in location
-	 */
+
+
 	private void happnedInRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -281,9 +281,8 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set the city/country as a participent in a conflict
-	 */
+
+
 	private void participatedInRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -308,7 +307,7 @@ public class FactsFileParserSecondRun extends FileParser{
 	}
 
 	/*
-	 * handles 2 cases:
+	 * This handler function handles 2 cases:
 	 * 1-set for cities the country in which they located
 	 * 2-set for a country the continent in which it is located
 	 */
@@ -351,9 +350,8 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 
-	/*
-	 * set for a country it's capital city
-	 */
+
+
 	private void hasCapitalRelation_mapSetter(String line) {
 		//now get the two entities related
 		StringBuilder left_container = new StringBuilder();
@@ -377,9 +375,11 @@ public class FactsFileParserSecondRun extends FileParser{
 		}
 	}
 	
-	//A parsing helper function
-	// form <A> <relation> <B> will return A in the return value and B in left_entity
-	//This function will return the right entity and return by reference the left one in 
+	/* 
+	 * A parsing helper function
+	 * form <A> <relation> <B> will return B in the return value and A in left_entity
+	 * This function will return the right entity and return by reference the left one in left_entity
+	 */
 	private String get_Left_Right_Entities(String line,StringBuilder left_entity){
 		
 		int indexEntityStart = FileParser.nth_occurence(2,line,"<");

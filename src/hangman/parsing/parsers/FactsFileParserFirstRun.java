@@ -5,19 +5,24 @@ import hangman.parsing.entities.LeaderEntity;
 
 import java.util.HashMap;
 
-
-
-/**
- * This is the first run on the file, in which we collect only the leaders entities
- * we do 2 runs because part of the information collected in FactsFileParserSecondRun is about leaders, 
- * and if we don't know the whole list before running this parser, we might miss some of the information
- */
-
 public class FactsFileParserFirstRun extends FileParser {
-
 	
+	/**
+	 * This class does some of the parsing of the yagoFacts.tsv file.
+	 * 
+	 * This is the second run on the file, in which we collect only the leaders entities
+	 * we do 2 runs because part of the information collected in FactsFileParserSecondRun is about leaders, and if we don't know the whole list before running this class, we might miss some of the information
+	 * 
+	 * line format in file:
+	 * connectionName_(uninteresting) entityLeft relationType entityRight
+	 * <id_jqyg1z_zkl_1xi58gi>	<Jefferson_County,_Texas>	<owns>	<Jack_Brooks_Regional_Airport>
+ */
+	
+	//this are used for statistics in debug
 	public static int isLeaderOfNum = 0;
 	
+	//This are the different relations of entities that we are interested in from this file
+	//In this iteration we interested in "isLeaderOf"
 	static String isLeaderOf_relation = "<isLeaderOf>";
 
 	@Override
@@ -26,6 +31,9 @@ public class FactsFileParserFirstRun extends FileParser {
 		ParsedData.leadersMap = new HashMap<String,LeaderEntity>(3000);
 	}
 
+	/*
+	 * @see db_parsers.FileParser#filter(java.lang.String)
+	 */
 	@Override
 	public void filter(String line) {
 		int indexEntityStart = FileParser.nth_occurence(3,line,"<");
@@ -37,6 +45,16 @@ public class FactsFileParserFirstRun extends FileParser {
 			isLeaderOfRelation_mapSetter(line);
 		}
 	}
+	
+	/*
+	 * These are handler function for this parser 
+	 * each of this functions checks if the "interesting" relation happens on a entity of the proper type.
+	 * If it does we make a leader object and put it in the map.
+	 * 
+	 * (*) Of course not every "interesting" relation is interesting for any type of entity. 
+	 * 		When we check that the relation happens on "a entity of the proper type" we take that into account.
+	 * 
+	 */
 	
 	private void isLeaderOfRelation_mapSetter(String line) {
 		//now get the two entities related
@@ -63,7 +81,11 @@ public class FactsFileParserFirstRun extends FileParser {
 		}
 	}
 	
-	//This function will return the right entity and return by reference the left one in 
+	/* 
+	 * A parsing helper function
+	 * form <A> <relation> <B> will return B in the return value and A in left_entity
+	 * This function will return the right entity and return by reference the left one in left_entity
+	 */
 	private String get_Left_Right_Entities(String line,StringBuilder left_entity){
 		int indexEntityStart = FileParser.nth_occurence(2,line,"<");
 		left_entity.append(line.substring(indexEntityStart, line.indexOf(">", indexEntityStart)+1));

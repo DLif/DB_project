@@ -4,17 +4,27 @@ import hangman.parsing.entities.Entity;
 
 public class LabelsParser extends FileParser{
 	
-	//skos:prefLabel
+	/**
+	 * This class does the parsing of the yagoLiteralFacts.tsv file.
+	 * 
+	 * line format in file:
+	 * connectionName_(uninteresting) entity labelType label
+	 * <id_3vgmh2_1sz_bfz811>	<Olmo,_Haute-Corse>	skos:prefLabel	"Olmo, Haute-Corse"@eng
+	 */
 	
-
+	//this variable holds the length of the string "skos:prefLabel". it is used in the parsing
 	public int prefLabelLen;
 
+	
 	public void init() {
-		
+		// fill the prefLabelLen variable
 		prefLabelLen = "skos:prefLabel".length();
-		
 	}
 
+	
+	/*
+	 * @see db_parsers.FileParser#filter(java.lang.String)
+	 */
 	public void filter(String line) {
 		int indexPrefLabel = line.indexOf("skos:prefLabel");
 		
@@ -87,6 +97,12 @@ public class LabelsParser extends FileParser{
 		
 	}
 	
+	
+	/* 
+	 * A parsing helper function
+	 * form <A> <labeType> "B" will return A in the return value and B in entity
+	 * This function will return the name and return by reference the entity in the "entity" parameter
+	 */
 	private String get_Entity_and_name(String line,StringBuilder entity){
 		
 		int indexEntityStart = FileParser.nth_occurence(2,line,"<");
