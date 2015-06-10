@@ -101,6 +101,9 @@ public class WikipediaInfoParser extends FileParser {
 			return; // if we get property to be null in the parsing, it means that this is a line with the <linksto> relation - this line doesn't interest us
 		}
 		
+		//remove obvious part of URL
+		property = property.replaceAll(">", "").replaceAll("<http://en.wikipedia.org/wiki/", "");
+		
 		
 		AdministrativeLocationEntity loc = ParsedData.locationsMap.get(entity);
 		if (loc != null){

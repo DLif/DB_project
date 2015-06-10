@@ -5,7 +5,7 @@ import hangman.parsing.entities.Entity;
 public class LabelsParser extends FileParser{
 	
 	/**
-	 * This class does the parsing of the yagoLiteralFacts.tsv file.
+	 * This class does the parsing of the yagoLabels.tsv file.
 	 * 
 	 * line format in file:
 	 * connectionName_(uninteresting) entity labelType label
