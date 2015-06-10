@@ -101,9 +101,10 @@ public class ParsedData {
 	
 	/**
 	 * serialize all maps
+	 * @throws Exception 
 	 */
 	
-	public static void serializeMaps()
+	public static void serializeMaps() throws Exception
 	{
 		serializeObject("conflicts.ser", conflictMap);
 		serializeObject("locations.ser", locationsMap);
@@ -140,7 +141,7 @@ public class ParsedData {
 			
 	}
 	
-	private static void serializeObject(String fileName, Object object)
+	private static void serializeObject(String fileName, Object object) throws Exception
 	{
 		
 		 try(FileOutputStream fileOut = new FileOutputStream(fileName);
@@ -152,6 +153,7 @@ public class ParsedData {
 		 catch(Exception e)
 		 {
 			 System.out.println("Failed to serialize " + fileName);
+			 throw e;
 		 }
 
 		

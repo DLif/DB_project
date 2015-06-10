@@ -3,6 +3,7 @@
 
 
 
+import hangman.db.ConnectionPool;
 import hangman.db.upload.ParsedDataUploader;
 import hangman.db.upload.AbstractBatchUploader;
 import hangman.parsing.parsers.FileParser;
@@ -27,7 +28,7 @@ public class Main {
 	public static boolean DESERIALIZE;
 	public static boolean SERIALIZE;
 	public static boolean UPLOAD;
-	public static Integer CONNECTIONS_PER_TABLE;
+	public static int CONNECTION_POOL_SIZE;
 	
 	//public static final String HOST = "localhost";
 	//public static final String PORT = "3305";
@@ -41,16 +42,40 @@ public class Main {
 	public static String USERNAME;
 	public static String PASSWORD;
 	
+	
+	/**
+	 * close resources
+	 */
 
+	public static void clean()
+	{
+		System.out.print("Closing connection pool ...");
+		try {
+			ConnectionPool.closePool();
+			System.out.println(" OK.");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return;
+	}
+	
 	public static void main(String[] args) {
 		
+		boolean quit = false;
 		String err = loadConfig();
 		if(err != null)
 		{
 			System.out.println("Error: " + err);
 			return;
 		}
-
+		long startTime = System.currentTimeMillis();
+		
+		
+		
+		// configure connection pool
+		ConnectionPool.configure(HOST, PORT, SCHEMA, USERNAME, PASSWORD, CONNECTION_POOL_SIZE);
+		
+	
 		if(DESERIALIZE)
 		{
 			System.out.println("Deserializing ..");
@@ -61,6 +86,7 @@ public class Main {
 			else
 			{
 				System.out.println("Deserialization failed, make sure serialization was previously performed");
+				quit = true;
 			}
 		}
 		else
@@ -68,18 +94,27 @@ public class Main {
 			System.out.println("Parsing ..");
 			try{
 				FileParser.parseAll();
+				System.out.println("Done Parsing !");
 			}
 			catch(Exception e)
 			{
 				System.out.println(e.getMessage());
+				quit = true;
 			}
-			System.out.println("Done Parsing !");
+			
 		}
+		if(quit)
+		{
+			clean();
+			return;
+		}
+		
+		long estimatedTime = System.currentTimeMillis() - startTime;
+		System.out.println(estimatedTime / 1000.0);
 
 		if(UPLOAD)
 		{
-		
-			ParsedDataUploader.configure(HOST, PORT, SCHEMA, USERNAME, PASSWORD, SERIALIZE, CONNECTIONS_PER_TABLE);
+			
 			ParsedDataUploader updatr = new ParsedDataUploader();
 			try{
 				updatr.begin();
@@ -87,14 +122,29 @@ public class Main {
 			catch(Exception e)
 			{
 				System.out.println(e.getMessage());
+				quit = true;
 			}
 			
 		}
-		else if (SERIALIZE)
+		if(quit)
 		{
-			// note that this data will not contain actual DB IDs
-			ParsedData.serializeMaps();
+			clean();
+			return;
 		}
+		
+		if (SERIALIZE)
+		{
+			try
+			{
+				ParsedData.serializeMaps();
+			}
+			catch(Exception e)
+			{
+				System.out.println("Serialization failed: " + e.getMessage());
+			}
+		}
+		
+		clean();
 		
 	
 	}
@@ -135,8 +185,7 @@ public class Main {
 			PASSWORD = prop.getProperty("dbpassword");
 			if(PASSWORD == null) throw new Exception("password name is missing");
 			
-			CONNECTIONS_PER_TABLE = Integer.parseInt(prop.getProperty("numConnectionPerTable"));
-			if(CONNECTIONS_PER_TABLE == null) throw new Exception("numConnectionPerTable is missing");
+			CONNECTION_POOL_SIZE = Integer.parseInt(prop.getProperty("connectionPoolSize"));
 			
 			
 			DESERIALIZE = Boolean.parseBoolean(prop.getProperty("deserialize"));

@@ -148,8 +148,9 @@ public abstract class EntityUploader extends AbstractBatchUploader {
 	{
 		if(str == null)
 			return null;
-
-		str = str.replaceAll("'", "''");
+		str = str.replace("'", "\'");
+		str = str.replace("\"", "\\\"");
+		str = str.replace("\\", "\\\\");
 		if(str.length() >= VARCHAR_LEN)
 		{
 			return str.substring(0, VARCHAR_LEN);
