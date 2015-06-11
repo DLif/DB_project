@@ -1,7 +1,7 @@
 package hangman.db.upload;
 
 import hangman.db.ConnectionPool;
-import hangman.db.QueryExecuter;
+import hangman.db.QueryExecutor;
 import hangman.db.upload.AbstractBatchUploader.DBUploaderType;
 import hangman.parsing.parsers.ParsedData;
 
@@ -385,14 +385,14 @@ private void initiateUpload() throws Exception
 		{
 			// disable foreign key constraints for this connection only
 	    	// 
-			QueryExecuter.execute(connection, "SET FOREIGN_KEY_CHECKS=0");
+			QueryExecutor.execute(connection, "SET FOREIGN_KEY_CHECKS=0");
 			for(String name : relationNames)
 	    	{
-				QueryExecuter.executeUpdate(connection, String.format("DELETE FROM %s", name));
+				QueryExecutor.executeUpdate(connection, String.format("DELETE FROM %s", name));
 	    	}
 			
 			// restore constraints
-			QueryExecuter.execute(connection, "SET FOREIGN_KEY_CHECKS=1");
+			QueryExecutor.execute(connection, "SET FOREIGN_KEY_CHECKS=1");
 	    	 
 	
 		}
