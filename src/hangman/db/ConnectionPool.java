@@ -186,7 +186,6 @@ public class ConnectionPool {
 				connections.add(DriverManager.getConnection(String.format("jdbc:mysql://%s:%s/%s", host, port, schema),
 						username,
 						password));
-				
 			}
 		} catch (Exception e) {
 			
@@ -196,7 +195,6 @@ public class ConnectionPool {
 				closeConnection(connections.get(i));
 			}
 			// rethrow 
-
 			throw e;
 		}
 		

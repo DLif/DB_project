@@ -1,8 +1,9 @@
 package hangman.db.upload;
 
+import hangman.db.ConnectionPool;
+import hangman.db.QueryExecuter;
 import hangman.db.upload.AbstractBatchUploader.DBUploaderType;
 import hangman.parsing.parsers.ParsedData;
-import hangman.ui.UIMain;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,51 +25,6 @@ import java.util.Set;
  */
 
 public class ParsedDataUploader {
-	
-	
-	 /**
-	  * Updater configurations
-	  */
-	
-	/**
-	 * DB connection details
-	 */
-	private static String host;
-	private static String port;
-	private static String schema;
-	private static String username;
-	private static String password;
-	
-	/**
-	 * serialize after upload process is complete
-	 */
-	private static boolean serialize;
-	
-	/**
-	 * how many connections should be allocated, at most, to upload a single table
-	 * for example, value 5 means uploading a relation will be split, at most, between 5 connections
-	 * (each connection will upload a single batch from the table)
-	 */
-	private static int connectionsPerTable;
-	
-	
-	public static void configure(String host,
-			String port,
-			String schema,
-			String username,
-			String password,
-			boolean serialize,
-			int connectionsPerTable)
-	{
-		ParsedDataUploader.host = host;
-		ParsedDataUploader.port = port;
-		ParsedDataUploader.schema = schema;
-		ParsedDataUploader.username = username;
-		ParsedDataUploader.password = password;
-		ParsedDataUploader.serialize = serialize;
-		ParsedDataUploader.connectionsPerTable = connectionsPerTable;
-	}
-	
 	
 	
 	/**
@@ -196,7 +152,7 @@ public class ParsedDataUploader {
 	 * hook this method to update progress bar
 	 * @param progress
 	 */
-	private void onProgressChange(final progressInfo progress)
+	private void onProgressChange(progressInfo progress)
 	{
 		switch(progress)
 		{
@@ -204,13 +160,7 @@ public class ParsedDataUploader {
 		case DELTEING_PREV:
 		case SERIALIZING:
 		case COMPLETE:
-			UIMain.display.asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					UIMain.disposeMessage();
-					UIMain.createMessageShell("Creating DB...\n"+progress);
-				}
-			});
+			System.out.println(progress);
 			return;
 			
 		case STEP0:
@@ -220,13 +170,8 @@ public class ParsedDataUploader {
 		case STEP4:
 		case STEP5:
 		case STEP6:
-			UIMain.display.asyncExec(new Runnable() {
-				@Override
-				public void run() {
-					UIMain.disposeMessage();
-					UIMain.createMessageShell("Creating DB...\n"+progress+","+progress.toPrecentage()+"%");
-				}
-			});
+			System.out.print(progress);
+			System.out.println(": " + progress.toPrecentage());
 			return;
 			
 		default:
@@ -239,178 +184,172 @@ public class ParsedDataUploader {
 /**
  * Upload all entities and all relations, using multiple connections and threads
  * The upload will be divided into 3 groups, each group is responsible for uploading to certain relations
- * each group will use a distinct set of connections (size: connectionsPerTable)
+ * each group will use a distinct set of connections (size: one third of the total connection pool size)
  * 
  * throws an exception in case of error
  * @throws Exception
  */
 private void initiateUpload() throws Exception
 {
+	ConnectionPool connectionPool = ConnectionPool.getPool();
+	int connectionsPerSequence = ConnectionPool.getPoolSize() / 3;
 	
-	Connection[][] connections = new Connection[3][connectionsPerTable];
-	Set<JDBCConnector> openConnectors = new HashSet<JDBCConnector>();
+	// connections for each sequence of uploads
+	Connection[] firstSeqConnections = connectionPool.getConnections(connectionsPerSequence + (ConnectionPool.getPoolSize() % 3));
+	Connection[] secondSeqConnections = connectionPool.getConnections(connectionsPerSequence);
+	Connection[] thirdSeqConnections = connectionPool.getConnections(connectionsPerSequence);
+	Exception exception = null;
 	
-	// open all required connections
-	for (int i = 0; i < connections.length; ++i)
-	{	
-		for(int j = 0; j < connections[i].length; ++j){
-			JDBCConnector connector = new JDBCConnector();
-			if (!connector.openConnection(host, port, schema, username, password, false))
-			{
-				// close all open connections
-				for(JDBCConnector openConnector : openConnectors)
-				{
-					openConnector.closeConnection();
-				}
-	
-				throw new Exception( "Failed to open connection # " + (i+1)*(j+1));
-				
-			}
-			else
-			{
-				openConnectors.add(connector);
-				connections[i][j] = connector.getConnection();
-			}
-		}
-	
-	}
-	
-	
-	// First sequence: Continents -> AdminDivsions  
-	Thread first = new Thread(new MultipleParallelUpload(
-			new DBUploaderType[]{ 
-					DBUploaderType.Continent,
-					DBUploaderType.AdminDivision,
-	
-			},
-			new String[] {
-					"Uploading Continents..",
-					"Uploading AdministrativeDivisions (Countries, Cities) ..",
-				
-			}, connections[0]
-	));
-	
-	
-	// Second sequence: Currency -> language -> military action -> battle -> war
-	Thread second = new Thread(new MultipleParallelUpload(
-	
-			new DBUploaderType[]{
-					DBUploaderType.Currency,
-					DBUploaderType.Language,
-					DBUploaderType.MilitaryAction,
-					DBUploaderType.Battle,
-					DBUploaderType.War
-			
-			},
-			new String[]{ 
-					"Uploading currencies..",
-					"Uploading Languages..",
-					"Uploading military actions..",
-					"Uploading battles ..",
-					"Uploading wars .."
-
-			},
-			connections[1]
-	));
-	
-	// start first two threads
-	first.start(); second.start();
-	
-	// wait for first thread to finish
-	first.join(); setStatus(progressInfo.STEP1);
-	
-	// Continue with first sequence
-	// country -> city -> capitals
-	first = new Thread(new MultipleParallelUpload(
-			new DBUploaderType[] {
-
-					DBUploaderType.Country,
-					DBUploaderType.City,
-					DBUploaderType.CapitalCities,
-					
-			
-			},
-			new String[]{
-					"Uploading countries..",
-					"Uploading cities ..",
-					"Setting capital cities ..",
-
-			},
-			connections[0]
-	));
-	
-	
-	// A third sequence:
-	// construction -> leader -> adminDivisionLeaders
-	Thread third = new Thread(new MultipleParallelUpload(
-			new DBUploaderType[] {
-					DBUploaderType.Construction,
-					DBUploaderType.Leader,
-					DBUploaderType.AdminDivisionLeaders,
-					
-			
-			},
-			new String[]{
-					"Uploading constructions..",
-					"Uploading leaders ..",
-					"Uploading AdministrativeDivisionLeaders ..",
-				
-			},
-			connections[2]
-			));
-			
-			
-	// continue with first, start third
-	first.start(); third.start();
-			
-	// wait for second to finish
-	second.join();  setStatus(progressInfo.STEP2);
-	second = new Thread(new MultipleParallelUpload(
-			new DBUploaderType[] {
-					DBUploaderType.MilitaryActionLocations,
-					DBUploaderType.MilitaryParticipants,
-					
-			
-			},
-			new String[]{
-					"Uploading MilitaryActionLocations ..",
-					"Uploading MilitaryActionParticipants .."
-				
-			},
-			connections[1]
-			));
-	
-	second.start();
-	
-	// wait for first to finish 
-	first.join(); setStatus(progressInfo.STEP3);
-	
-	// ( first uploaded countries, second uploaded languages)
-	first = new Thread(new MultipleParallelUpload(
-			new DBUploaderType[] {
-					DBUploaderType.LanguagesInCountries
-			
-			},
-			new String[]{
-					"Uploading LanguagesInCountries ..",
-			},
-			connections[0]
-	));
-	
-	// wait for all to finish
-	third.join();  setStatus(progressInfo.STEP4);
-	
-	second.join(); setStatus(progressInfo.STEP5);
-	
-	first.join();  setStatus(progressInfo.STEP6);
-	
-	if(serialize)
+	try
 	{
-		 // now that all IDs are set, serialize information
-		ParsedData.serializeMaps();
+
+		// First sequence: Continents -> AdminDivsions  
+		Thread first = new Thread(new MultipleParallelUpload(
+				new DBUploaderType[]{ 
+						DBUploaderType.Continent,
+						DBUploaderType.AdminDivision,
+
+				},
+				new String[] {
+						"Uploading Continents..",
+						"Uploading AdministrativeDivisions (Countries, Cities) ..",
+
+				}, 
+				firstSeqConnections
+				));
+
+
+		// Second sequence: Currency -> language -> military action -> battle -> war
+		Thread second = new Thread(new MultipleParallelUpload(
+
+				new DBUploaderType[]{
+						DBUploaderType.Currency,
+						DBUploaderType.Language,
+						DBUploaderType.MilitaryAction,
+						DBUploaderType.Battle,
+						DBUploaderType.War
+
+				},
+				new String[]{ 
+						"Uploading currencies..",
+						"Uploading Languages..",
+						"Uploading military actions..",
+						"Uploading battles ..",
+						"Uploading wars .."
+
+				},
+				secondSeqConnections
+				));
+
+		// start first two threads
+		first.start(); second.start();
+
+		// wait for first thread to finish
+		first.join(); setStatus(progressInfo.STEP1);
+
+		// Continue with first sequence
+		// country -> city -> capitals
+		first = new Thread(new MultipleParallelUpload(
+				new DBUploaderType[] {
+
+						DBUploaderType.Country,
+						DBUploaderType.City,
+						DBUploaderType.CapitalCities,
+
+
+				},
+				new String[]{
+						"Uploading countries..",
+						"Uploading cities ..",
+						"Setting capital cities ..",
+
+				},
+				firstSeqConnections
+				));
+
+
+		// A third sequence:
+		// construction -> leader -> adminDivisionLeaders
+		Thread third = new Thread(new MultipleParallelUpload(
+				new DBUploaderType[] {
+						DBUploaderType.Construction,
+						DBUploaderType.Leader,
+						DBUploaderType.AdminDivisionLeaders,
+
+
+				},
+				new String[]{
+						"Uploading constructions..",
+						"Uploading leaders ..",
+						"Uploading AdministrativeDivisionLeaders ..",
+
+				},
+				thirdSeqConnections
+				));
+
+
+		// continue with first, start third
+		first.start(); third.start();
+
+		// wait for second to finish
+		second.join();  setStatus(progressInfo.STEP2);
+		second = new Thread(new MultipleParallelUpload(
+				new DBUploaderType[] {
+						DBUploaderType.MilitaryActionLocations,
+						DBUploaderType.MilitaryParticipants,
+
+
+				},
+				new String[]{
+						"Uploading MilitaryActionLocations ..",
+						"Uploading MilitaryActionParticipants .."
+
+				},
+				secondSeqConnections
+				));
+
+		second.start();
+
+		// wait for first to finish 
+		first.join(); setStatus(progressInfo.STEP3);
+
+		// ( first uploaded countries, second uploaded languages)
+		first = new Thread(new MultipleParallelUpload(
+				new DBUploaderType[] {
+						DBUploaderType.LanguagesInCountries
+
+				},
+				new String[]{
+						"Uploading LanguagesInCountries ..",
+				},
+				firstSeqConnections
+				));
+	
+		// wait for all to finish
+		third.join();  setStatus(progressInfo.STEP4);
+	
+		second.join(); setStatus(progressInfo.STEP5);
+	
+		first.join();  setStatus(progressInfo.COMPLETE);
+	}
+	catch(Exception e)
+	{
+		// save exception
+		exception = e;
+	}
+	finally
+	{
+		// return all connections to the pool
+		connectionPool.returnConnections(firstSeqConnections);
+		connectionPool.returnConnections(secondSeqConnections);
+		connectionPool.returnConnections(thirdSeqConnections);
 	}
 	
-	first.join();  setStatus(progressInfo.COMPLETE);
+	if(exception != null)
+	{
+		// exception was thrown
+		throw exception;
+	}
 }
 	
 	
@@ -421,6 +360,8 @@ private void initiateUpload() throws Exception
 	 */
 	private void clearExistingRelations() throws Exception
 	{
+		
+		ConnectionPool connectionPool = ConnectionPool.getPool();
 		String[] relationNames = {"`AdministrativeDivision`", 
 										"`AdministrativeDivisionLeader`",
 										"`Battle`",
@@ -438,39 +379,37 @@ private void initiateUpload() throws Exception
 										"`War`"
 		};
 		
-		JDBCConnector connector;
-		
-		connector = new JDBCConnector();
-		
-		// connecting
-		if (!connector.openConnection(host, port, schema, username, password, false))
+		Exception exception = null;
+		Connection connection = connectionPool.getConnection();
+		try
 		{
-			throw new Exception("Could not delete existing records: failed to connect");
+			// disable foreign key constraints for this connection only
+	    	// 
+			QueryExecuter.execute(connection, "SET FOREIGN_KEY_CHECKS=0");
+			for(String name : relationNames)
+	    	{
+				QueryExecuter.executeUpdate(connection, String.format("DELETE FROM %s", name));
+	    	}
+			
+			// restore constraints
+			QueryExecuter.execute(connection, "SET FOREIGN_KEY_CHECKS=1");
+	    	 
+	
 		}
-		
-	     try(Statement stmt = connector.getConnection().createStatement())
-	     {
-	    	 // disable foreign key constraints for this connection only
-	    	 // 
-	    	 stmt.execute("SET FOREIGN_KEY_CHECKS=0");
-	    	 
-	    	 for(String name : relationNames)
-	    	 {
-	    		 stmt.executeUpdate(String.format("DELETE FROM %s", name));
-	    		// System.out.println("removed " + res + " rows from " + name);
-	    	 }
-	    	 
-	    	 stmt.execute("SET FOREIGN_KEY_CHECKS=1");
-	   
-	     }
-	     catch(SQLException ex)
-	     {
-	    	 connector.closeConnection();
-	    	 throw ex;
-	     }
-		
-		// close connection
-		connector.closeConnection();
+		catch(Exception e)
+		{
+			exception = e;
+		}
+		finally
+		{
+			connectionPool.returnConnection(connection);
+		}
+	    
+		if(exception != null)
+		{
+			throw exception;
+		}
+	
 	
 	}
 	

@@ -1,7 +1,5 @@
 package hangman.parsing.parsers;
 
-import hangman.ui.UIMain;
-
 import java.io.FileInputStream;
 import java.util.Scanner;
 
@@ -111,16 +109,9 @@ public abstract class FileParser {
 	 * @param progress
 	 */
 	
-	public static void updateProgress(final String currentFile, final double progress)
+	public static void updateProgress(String currentFile, double progress)
 	{
-		UIMain.display.asyncExec(new Runnable() {
-			@Override
-			public void run() {
-				UIMain.disposeMessage();
-				UIMain.createMessageShell("Parsing "+currentFile+"\nProgess "+progress);
-			}
-		});
-		return;
+		System.out.println("Parsing " + currentFile + ", Progress: " + progress);
 	}
 	
 	/**
