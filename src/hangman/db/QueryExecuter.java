@@ -80,9 +80,9 @@ public class QueryExecuter {
 	 * @throws Exception 
 	 */
 	
-	public static ResultSet executeQuery(String query) throws Exception
+	public static SResultSet executeQuery(String query) throws Exception
 	{
-		ResultSet result = null;
+		SResultSet result = null;
 		Exception exception = null;
 		Connection connection = getConnection();
 		try
@@ -114,12 +114,28 @@ public class QueryExecuter {
 	 * @throws SQLException
 	 */
 	
-	public static ResultSet executeQuery(Connection connection, String query) throws SQLException
+	public static SResultSet executeQuery(Connection connection, String query) throws SQLException
 	{
-		 try(Statement stmt = connection.createStatement())
-		  {
-		    	return stmt.executeQuery(query);
-		  }
+		Statement stmt = null;
+		ResultSet result = null;
+		
+		try
+		{
+			 stmt = connection.createStatement();
+		     result =  stmt.executeQuery(query);
+		}
+		catch(Exception e)
+		{
+			// close resources and rethrow
+			
+			if( result != null) result.close();
+			if( stmt != null)   stmt.close();
+			
+			throw e;
+		}
+		
+		return new SResultSet(stmt, result);
+		
 	}
 	
 	/**
